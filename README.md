@@ -47,6 +47,9 @@ The application is fully responsive and works seamlessly across devices, includi
   - [Local Development](#local-development)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
+  - [API Endpoints](#api-endpoints-1)
+    - [Signup Route](#signup-route)
+  - [Avatar Placeholder](#avatar-placeholder)
   - [Credits](#credits)
     - [Content](#content)
     - [Media](#media)
@@ -203,14 +206,27 @@ The source code is available at:
     cd backend
     npm install express dotenv cookie-parser bcryptjs mongoose socket.io jsonwebtoken
     npm install nodemon --save-dev
+    ```
+
+4. Generate a JWT secret:
+    ```bash
+    openssl rand -base64 32
+    ```
+    Copy the generated secret and add it to your `.env` file:
+    ```
+    JWT_SECRET=<your_generated_secret>
+    ```
+
+5. Database Setup:
+    - Use MongoDB Atlas or a local MongoDB instance.
+    - Add the connection string to your `.env` file:
+      ```
+      MONGO_DB_URI=<your_mongodb_connection_string>
+      ```
+
+6. Start the backend server:
+    ```bash
     npm run server
-    # Create a .env file in the backend directory with the following variables:
-    # PORT=5000
-    # MONGO_URI=<your_mongodb_connection_string>
-    # JWT_SECRET=<your_jwt_secret>
-    # CLOUDINARY_CLOUD_NAME=<your_cloudinary_cloud_name>
-    # CLOUDINARY_API_KEY=<your_cloudinary_api_key>
-    # CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
     ```
 
 4. Frontend Setup:
@@ -220,6 +236,46 @@ The source code is available at:
     npm install
     npm run dev
     ```
+
+---
+
+## API Endpoints
+
+### Signup Route
+
+**POST** `/api/auth/signup`  
+**Description:** Registers a new user.  
+
+**Request Body:**
+```json
+{
+    "fullName": "John Doe",
+    "username": "johndoe",
+    "password": "password123",
+    "confirmPassword": "password123",
+    "gender": "male"
+}
+```
+
+**Response:**
+```json
+{
+    "_id": "user_id",
+    "fullName": "John Doe",
+    "username": "johndoe",
+    "profilePic": "https://avatar.iran.liara.run/public/boy?username=johndoe"
+}
+```
+
+---
+
+## Avatar Placeholder
+
+The application uses the following service for generating profile pictures:  
+[https://avatar-placeholder.iran.liara.run/](https://avatar-placeholder.iran.liara.run/)
+
+- Male Avatar: `https://avatar.iran.liara.run/public/boy?username=<username>`
+- Female Avatar: `https://avatar.iran.liara.run/public/girl?username=<username>`
 
 ---
 
