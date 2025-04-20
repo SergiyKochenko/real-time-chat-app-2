@@ -49,6 +49,9 @@ The application is fully responsive and works seamlessly across devices, includi
     - [Installation](#installation)
   - [API Endpoints](#api-endpoints-1)
     - [Signup Route](#signup-route)
+    - [Login Route](#login-route)
+    - [Logout Route](#logout-route)
+  - [Testing](#testing-1)
   - [Avatar Placeholder](#avatar-placeholder)
   - [Credits](#credits)
     - [Content](#content)
@@ -266,6 +269,57 @@ The source code is available at:
     "profilePic": "https://avatar.iran.liara.run/public/boy?username=johndoe"
 }
 ```
+
+---
+
+### Login Route
+
+**POST** `/api/auth/login`  
+**Description:** Logs in an existing user.  
+
+**Request Body:**
+```json
+{
+    "username": "johndoe",
+    "password": "password123"
+}
+```
+
+**Response:**
+```json
+{
+    "_id": "user_id",
+    "fullName": "John Doe",
+    "username": "johndoe",
+    "profilePic": "https://avatar.iran.liara.run/public/boy?username=johndoe"
+}
+```
+
+---
+
+### Logout Route
+
+**POST** `/api/auth/logout`  
+**Description:** Logs out the current user by clearing the JWT cookie.  
+
+**Response:**
+```json
+{
+    "message": "Logged out successfully"
+}
+```
+
+---
+
+## Testing
+
+All routes (Signup, Login, Logout) were tested using [Postman](https://www.postman.com/). Below are the steps to test:
+
+1. Open Postman and create a new request.
+2. Set the request type to `POST`.
+3. Enter the appropriate route URL (e.g., `http://localhost:5000/api/auth/signup`).
+4. Add the required request body in JSON format.
+5. Send the request and verify the response.
 
 ---
 
