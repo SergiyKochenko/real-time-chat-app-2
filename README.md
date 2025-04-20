@@ -1,0 +1,249 @@
+# Real-Time Chat App Without Images Uploads
+
+A real-time chat application allowing users to communicate instantly. Built using the MERN stack (MongoDB, Express, React, Node.js) and Socket.IO for real-time web socket communication.
+
+[View Live Demo](https://...)  
+[View Repository](https://...)
+
+---
+
+## Am I Responsive?
+
+![Am I Responsive](./assets/amiresponsive.png)
+
+The application is fully responsive and works seamlessly across devices, including desktops, tablets, and mobile phones.
+
+---
+
+## Table of Contents
+
+- [Real-Time Chat App Without Images Uploads](#real-time-chat-app-without-images-uploads)
+  - [Am I Responsive?](#am-i-responsive)
+  - [Table of Contents](#table-of-contents)
+  - [Project Goals](#project-goals)
+  - [User Experience (UX)](#user-experience-ux)
+    - [User Stories](#user-stories)
+  - [Design](#design)
+    - [Wireframes](#wireframes)
+    - [Color Scheme](#color-scheme)
+    - [Typography](#typography)
+  - [Features](#features)
+    - [Existing Features](#existing-features)
+    - [Future Features](#future-features)
+  - [Technologies Used](#technologies-used)
+    - [Frontend](#frontend)
+    - [Backend](#backend)
+    - [API Endpoints](#api-endpoints)
+  - [Testing](#testing)
+    - [Manual Testing](#manual-testing)
+    - [Validator Testing](#validator-testing)
+    - [Performance Testing](#performance-testing)
+    - [Known Bugs](#known-bugs)
+  - [Deployment](#deployment)
+    - [Preparation for Deployment](#preparation-for-deployment)
+    - [Backend Deployment](#backend-deployment)
+    - [Frontend Deployment](#frontend-deployment)
+    - [Completed Deployment](#completed-deployment)
+  - [Local Development](#local-development)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Credits](#credits)
+    - [Content](#content)
+    - [Media](#media)
+    - [Code](#code)
+    - [Acknowledgements](#acknowledgements)
+  - [License](#license)
+
+---
+
+## Project Goals
+
+The goal of this project is to create a real-time chat application that allows users to communicate instantly. The application is designed to provide a seamless and secure user experience with features like user authentication, profile management, and real-time messaging.
+
+---
+
+## User Experience (UX)
+
+### User Stories
+
+* As a user, I want to register an account so that I can log in and use the chat.
+* As a user, I want to log in with my email and password so that I can access my chat sessions.
+* As a user, I want to update my profile picture so that I can personalize my account.
+* As a user, I want to log out securely so that my account remains safe.
+
+---
+
+## Design
+
+### Wireframes
+
+*(Include links or images of wireframes for key pages like Login, Signup, Chat Interface, etc.)*
+
+### Color Scheme
+
+*(Specify the color palette used in the application.)*
+
+### Typography
+
+*(Specify the fonts used for headings, body text, etc.)*
+
+---
+
+## Features
+
+### Existing Features
+
+* **User Authentication:** Secure signup, login, and logout functionality using JWT and cookies.
+* **Profile Management:** Users can update their profile picture.
+* **Real-time Messaging:** *(Add details once implemented.)*
+* **Responsive Design:** *(Add details once implemented.)*
+
+### Future Features
+
+* Group chats.
+* Online status indicators.
+* Message notifications.
+* Search functionality for users or messages.
+
+---
+
+## Technologies Used
+
+### Frontend
+
+* React
+* Vite
+* Zustand (State Management)
+* CSS (or specify framework like Tailwind CSS)
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB (Database)
+* Mongoose (ODM)
+* JSON Web Tokens (JWT)
+* bcryptjs
+* cookie-parser
+* dotenv
+* Cloudinary (for image uploads)
+
+### API Endpoints
+
+*(Add details about API endpoints as needed.)*
+
+---
+
+## Testing
+
+### Manual Testing
+
+*(Provide a table or list of manual tests performed.)*
+
+### Validator Testing
+
+*(Provide details about HTML, CSS, and JavaScript validation.)*
+
+### Performance Testing
+
+*(Include Lighthouse scores for Performance, Accessibility, Best Practices, SEO.)*
+
+### Known Bugs
+
+*(List any known bugs or issues.)*
+
+---
+
+## Deployment
+
+### Preparation for Deployment
+
+*(Provide steps for preparing the application for deployment.)*
+
+### Backend Deployment
+
+*(Specify the platform used, e.g., Render, Heroku, and the steps involved.)*
+
+### Frontend Deployment
+
+*(Specify the platform used, e.g., Vercel, Netlify, and the steps involved.)*
+
+### Completed Deployment
+
+The application has been successfully deployed and is live at:  
+**[https://....](https://....)**
+
+The source code is available at:  
+**[https://github.com...](https://github.com....)**
+
+---
+
+## Local Development
+
+### Prerequisites
+
+* Node.js and npm (or yarn) installed.
+* MongoDB instance (local or cloud-based like MongoDB Atlas).
+* Cloudinary account (for image uploads).
+
+### Installation
+
+1. Clone the repository:
+    ```bash
+    git clone <your-repository-url>
+    cd chat-app-yt
+    ```
+
+2. Initialize the project:
+    ```bash
+    npm init -y
+    ```
+
+3. Backend Setup:
+    ```bash
+    cd backend
+    npm install express dotenv cookie-parser bcryptjs mongoose socket.io jsonwebtoken
+    npm install nodemon --save-dev
+    npm run server
+    # Create a .env file in the backend directory with the following variables:
+    # PORT=5000
+    # MONGO_URI=<your_mongodb_connection_string>
+    # JWT_SECRET=<your_jwt_secret>
+    # CLOUDINARY_CLOUD_NAME=<your_cloudinary_cloud_name>
+    # CLOUDINARY_API_KEY=<your_cloudinary_api_key>
+    # CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
+    ```
+
+4. Frontend Setup:
+    ```bash
+    cd ../frontend
+    npm create vite@latest .
+    npm install
+    npm run dev
+    ```
+
+---
+
+## Credits
+
+### Content
+
+*(Acknowledge any tutorials, documentation, or other resources used.)*
+
+### Media
+
+*(Acknowledge sources for images, icons, etc.)*
+
+### Code
+
+*(Acknowledge any significant code snippets or libraries used.)*
+
+### Acknowledgements
+
+*(Thank anyone who helped or inspired the project.)*
+
+---
+
+## License
+
+*(Specify the license for your project, e.g., MIT License.)*
