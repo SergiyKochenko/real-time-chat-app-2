@@ -188,9 +188,8 @@ The source code is available at:
 
 ### Installation
 
-1. Clone the repository:
+1. Navigate to the project directory:
     ```bash
-    git clone <your-repository-url>
     cd chat-app-yt
     ```
 
