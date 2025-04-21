@@ -24,9 +24,11 @@ The application is fully responsive and works seamlessly across devices, includi
   - [User Experience (UX)](#user-experience-ux)
     - [User Stories](#user-stories)
   - [Design](#design)
+    - [Frontend Authentication Pages](#frontend-authentication-pages)
     - [Wireframes](#wireframes)
     - [Color Scheme](#color-scheme)
     - [Typography](#typography)
+    - [Browser Icon and App Name](#browser-icon-and-app-name)
   - [Features](#features)
     - [Existing Features](#existing-features)
     - [Future Features](#future-features)
@@ -86,6 +88,18 @@ The goal of this project is to create a real-time chat application that allows u
 
 ## Design
 
+### Frontend Authentication Pages
+
+The application includes the following authentication pages:
+
+1. **Login Page**  
+   - A minimalistic and responsive design with a glassmorphism effect.
+   - Allows users to log in using their username and password.
+
+2. **SignUp Page**  
+   - A user-friendly interface for new users to register.
+   - Includes fields for full name, username, password, and gender selection.
+
 ### Wireframes
 
 *(Include links or images of wireframes for key pages like Login, Signup, Chat Interface, etc.)*
@@ -97,6 +111,11 @@ The goal of this project is to create a real-time chat application that allows u
 ### Typography
 
 *(Specify the fonts used for headings, body text, etc.)*
+
+### Browser Icon and App Name
+
+- The browser icon has been updated to a custom chat icon (`chat-icon.svg`).
+- The app name displayed in the browser tab is now **Go-Chat**.
 
 ---
 
@@ -126,6 +145,8 @@ The goal of this project is to create a real-time chat application that allows u
 * Vite
 * Zustand (State Management)
 * CSS (or specify framework like Tailwind CSS)
+* DaisyUI (for Tailwind CSS components)
+* Glassmorphism design using Tailwind CSS
 
 ### Backend
 
@@ -242,6 +263,8 @@ The source code is available at:
     cd ../frontend
     npm create vite@latest .
     npm install
+    npm install -D tailwindcss@3 postcss autoprefixer daisyui@4.12.23
+    npx tailwindcss init -p
     npm run dev
     ```
 
