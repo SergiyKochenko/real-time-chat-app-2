@@ -54,6 +54,8 @@ The application is fully responsive and works seamlessly across devices, includi
     - [Message Routes](#message-routes)
       - [**GET** `/api/messages/:id`](#get-apimessagesid)
       - [**POST** `/api/messages/send/:id`](#post-apimessagessendid)
+    - [User Routes](#user-routes)
+      - [**GET** `/api/users/`](#get-apiusers)
   - [Testing](#testing-1)
   - [Avatar Placeholder](#avatar-placeholder)
   - [Credits](#credits)
@@ -371,6 +373,39 @@ The source code is available at:
     "createdAt": "2023-10-01T12:00:00.000Z",
     "updatedAt": "2023-10-01T12:00:00.000Z"
 }
+```
+
+---
+
+### User Routes
+
+#### **GET** `/api/users/`
+**Description:** Fetches a list of users excluding the logged-in user for the sidebar.
+
+**Headers:**
+- `Authorization`: Bearer `<JWT Token>`
+
+**Response:**
+- **200 OK**: Returns an array of user objects excluding the logged-in user.
+- **401 Unauthorized**: If the user is not authenticated.
+- **500 Internal Server Error**: If an error occurs on the server.
+
+**Example Response:**
+```json
+[
+    {
+        "_id": "user_id_1",
+        "fullName": "Jane Doe",
+        "username": "janedoe",
+        "profilePic": "https://avatar.iran.liara.run/public/girl?username=janedoe"
+    },
+    {
+        "_id": "user_id_2",
+        "fullName": "John Smith",
+        "username": "johnsmith",
+        "profilePic": "https://avatar.iran.liara.run/public/boy?username=johnsmith"
+    }
+]
 ```
 
 ---
