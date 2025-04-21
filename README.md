@@ -25,6 +25,7 @@ The application is fully responsive and works seamlessly across devices, includi
     - [User Stories](#user-stories)
   - [Design](#design)
     - [Frontend Authentication Pages](#frontend-authentication-pages)
+    - [Home Page UI Design](#home-page-ui-design)
     - [Wireframes](#wireframes)
     - [Color Scheme](#color-scheme)
     - [Typography](#typography)
@@ -100,6 +101,23 @@ The application includes the following authentication pages:
    - A user-friendly interface for new users to register.
    - Includes fields for full name, username, password, and gender selection.
 
+### Home Page UI Design
+
+The Home Page UI has been completed with the following features:
+
+1. **Sidebar**  
+   - Includes a search input for finding conversations.
+   - Displays a list of conversations with user avatars and names.
+   - Provides a logout button for secure account management.
+
+2. **Message Container**  
+   - Displays the selected conversation's messages in a chat bubble format.
+   - Includes a message input field with a send button for sending messages.
+   - Shows a placeholder message when no chat is selected.
+
+3. **Responsive Design**  
+   - The layout is fully responsive and adapts to different screen sizes.
+
 ### Wireframes
 
 *(Include links or images of wireframes for key pages like Login, Signup, Chat Interface, etc.)*
@@ -147,6 +165,7 @@ The application includes the following authentication pages:
 * CSS (or specify framework like Tailwind CSS)
 * DaisyUI (for Tailwind CSS components)
 * Glassmorphism design using Tailwind CSS
+* React Icons (for icons used in the UI)
 
 ### Backend
 
@@ -264,6 +283,7 @@ The source code is available at:
     npm create vite@latest .
     npm install
     npm install -D tailwindcss@3 postcss autoprefixer daisyui@4.12.23
+    npm install react-icons --save
     npx tailwindcss init -p
     npm run dev
     ```
