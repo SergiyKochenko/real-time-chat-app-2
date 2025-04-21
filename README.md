@@ -51,6 +51,9 @@ The application is fully responsive and works seamlessly across devices, includi
     - [Signup Route](#signup-route)
     - [Login Route](#login-route)
     - [Logout Route](#logout-route)
+    - [Message Routes](#message-routes)
+      - [**GET** `/api/messages/:id`](#get-apimessagesid)
+      - [**POST** `/api/messages/send/:id`](#post-apimessagessendid)
   - [Testing](#testing-1)
   - [Avatar Placeholder](#avatar-placeholder)
   - [Credits](#credits)
@@ -306,6 +309,67 @@ The source code is available at:
 ```json
 {
     "message": "Logged out successfully"
+}
+```
+
+---
+
+### Message Routes
+
+#### **GET** `/api/messages/:id`
+**Description:** Fetch all messages in a conversation between the logged-in user and the user specified by `id`.
+
+**Headers:**
+- `Authorization`: Bearer `<JWT Token>`
+
+**Response:**
+- **200 OK**: Returns an array of messages.
+- **401 Unauthorized**: If the user is not authenticated.
+- **500 Internal Server Error**: If an error occurs on the server.
+
+**Example Response:**
+```json
+[
+    {
+        "_id": "message_id",
+        "senderId": "sender_user_id",
+        "receiverId": "receiver_user_id",
+        "message": "Hello!",
+        "createdAt": "2023-10-01T12:00:00.000Z",
+        "updatedAt": "2023-10-01T12:00:00.000Z"
+    }
+]
+```
+
+---
+
+#### **POST** `/api/messages/send/:id`
+**Description:** Send a message to the user specified by `id`.
+
+**Headers:**
+- `Authorization`: Bearer `<JWT Token>`
+
+**Request Body:**
+```json
+{
+    "message": "Hello, how are you?"
+}
+```
+
+**Response:**
+- **201 Created**: Returns the created message.
+- **401 Unauthorized**: If the user is not authenticated.
+- **500 Internal Server Error**: If an error occurs on the server.
+
+**Example Response:**
+```json
+{
+    "_id": "message_id",
+    "senderId": "sender_user_id",
+    "receiverId": "receiver_user_id",
+    "message": "Hello, how are you?",
+    "createdAt": "2023-10-01T12:00:00.000Z",
+    "updatedAt": "2023-10-01T12:00:00.000Z"
 }
 ```
 
