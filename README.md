@@ -83,7 +83,8 @@ The goal of this project is to create a real-time chat application that allows u
 * As a user, I want to register an account so that I can log in and use the chat.
 * As a user, I want to log in with my username and password so that I can access my chat sessions.
 * As a user, I want to log out securely so that my account remains safe.
-* As a user, I want to receive real-time feedback for actions like login, signup, and logout.
+* As a user, I want to view a list of conversations in the sidebar.
+* As a user, I want to select a conversation to view its messages.
 
 ---
 
@@ -149,6 +150,7 @@ The Home Page UI has been completed with the following features:
 
 * **User Authentication:** Secure signup, login, and logout functionality using JWT and cookies.
 * **Real-Time Feedback:** Integrated `react-hot-toast` for real-time notifications.
+* **Sidebar Conversations:** Fetch and display a list of conversations using `zustand` for state management.
 * **Profile Management:** Users can update their profile picture.
 * **Responsive Design:** Fully responsive layout for all devices.
 
@@ -167,7 +169,7 @@ The Home Page UI has been completed with the following features:
 
 * React
 * Vite
-* Zustand (State Management)
+* Zustand (State Management) - [Learn More](https://zustand-demo.pmnd.rs/)
 * CSS (or specify framework like Tailwind CSS)
 * DaisyUI (for Tailwind CSS components)
 * Glassmorphism design using Tailwind CSS
@@ -288,14 +290,14 @@ The source code is available at:
     ```bash
     cd ../frontend
     npm install
-    npm install react-hot-toast
+    npm install react-hot-toast zustand
     npm install -D tailwindcss@3 postcss autoprefixer daisyui@4.12.23
     npm install react-icons --save
     npx tailwindcss init -p
     npm run dev
     ```
 
----
+--- 
 
 ## API Endpoints
 
@@ -487,6 +489,7 @@ The application uses the following service for generating profile pictures:
 ### Content
 
 * [React Hot Toast Documentation](https://react-hot-toast.com/)
+* [Zustand Documentation](https://zustand-demo.pmnd.rs/)
 
 ### Media
 
@@ -498,7 +501,7 @@ The application uses the following service for generating profile pictures:
 
 ### Acknowledgements
 
-* Thanks to the creators of React, Tailwind CSS, and DaisyUI for their amazing tools.
+* Thanks to the creators of React, Tailwind CSS, DaisyUI, and Zustand for their amazing tools.
 
 ---
 
