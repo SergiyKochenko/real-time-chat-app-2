@@ -81,9 +81,9 @@ The goal of this project is to create a real-time chat application that allows u
 ### User Stories
 
 * As a user, I want to register an account so that I can log in and use the chat.
-* As a user, I want to log in with my email and password so that I can access my chat sessions.
-* As a user, I want to update my profile picture so that I can personalize my account.
+* As a user, I want to log in with my username and password so that I can access my chat sessions.
 * As a user, I want to log out securely so that my account remains safe.
+* As a user, I want to receive real-time feedback for actions like login, signup, and logout.
 
 ---
 
@@ -96,10 +96,16 @@ The application includes the following authentication pages:
 1. **Login Page**  
    - A minimalistic and responsive design with a glassmorphism effect.
    - Allows users to log in using their username and password.
+   - Displays real-time feedback using `react-hot-toast`.
 
 2. **SignUp Page**  
    - A user-friendly interface for new users to register.
    - Includes fields for full name, username, password, and gender selection.
+   - Displays real-time feedback using `react-hot-toast`.
+
+3. **Logout Functionality**  
+   - A logout button is available in the sidebar.
+   - Displays a loading spinner during the logout process.
 
 ### Home Page UI Design
 
@@ -142,9 +148,9 @@ The Home Page UI has been completed with the following features:
 ### Existing Features
 
 * **User Authentication:** Secure signup, login, and logout functionality using JWT and cookies.
+* **Real-Time Feedback:** Integrated `react-hot-toast` for real-time notifications.
 * **Profile Management:** Users can update their profile picture.
-* **Real-time Messaging:** *(Add details once implemented.)*
-* **Responsive Design:** *(Add details once implemented.)*
+* **Responsive Design:** Fully responsive layout for all devices.
 
 ### Future Features
 
@@ -166,6 +172,7 @@ The Home Page UI has been completed with the following features:
 * DaisyUI (for Tailwind CSS components)
 * Glassmorphism design using Tailwind CSS
 * React Icons (for icons used in the UI)
+* **React Hot Toast**: For real-time notifications.
 
 ### Backend
 
@@ -277,11 +284,11 @@ The source code is available at:
     npm run server
     ```
 
-4. Frontend Setup:
+7. Frontend Setup:
     ```bash
     cd ../frontend
-    npm create vite@latest .
     npm install
+    npm install react-hot-toast
     npm install -D tailwindcss@3 postcss autoprefixer daisyui@4.12.23
     npm install react-icons --save
     npx tailwindcss init -p
@@ -479,7 +486,7 @@ The application uses the following service for generating profile pictures:
 
 ### Content
 
-*(Acknowledge any tutorials, documentation, or other resources used.)*
+* [React Hot Toast Documentation](https://react-hot-toast.com/)
 
 ### Media
 
@@ -491,7 +498,7 @@ The application uses the following service for generating profile pictures:
 
 ### Acknowledgements
 
-*(Thank anyone who helped or inspired the project.)*
+* Thanks to the creators of React, Tailwind CSS, and DaisyUI for their amazing tools.
 
 ---
 
