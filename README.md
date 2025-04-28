@@ -1,4 +1,4 @@
-# Real-Time Chat App Without Images Uploads
+# Chat App
 
 A real-time chat application allowing users to communicate instantly. Built using the MERN stack (MongoDB, Express, React, Node.js) and Socket.IO for real-time web socket communication.
 
@@ -17,7 +17,7 @@ The application is fully responsive and works seamlessly across devices, includi
 
 ## Table of Contents
 
-- [Real-Time Chat App Without Images Uploads](#real-time-chat-app-without-images-uploads)
+- [Chat App](#chat-app)
   - [Am I Responsive?](#am-i-responsive)
   - [Table of Contents](#table-of-contents)
   - [Project Goals](#project-goals)
@@ -50,6 +50,8 @@ The application is fully responsive and works seamlessly across devices, includi
   - [Local Development](#local-development)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
+  - [Send Message Functionality](#send-message-functionality)
+  - [Socket.IO Implementation](#socketio-implementation)
   - [API Endpoints](#api-endpoints-1)
     - [Signup Route](#signup-route)
     - [Login Route](#login-route)
@@ -290,14 +292,43 @@ The source code is available at:
     ```bash
     cd ../frontend
     npm install
-    npm install react-hot-toast zustand
-    npm install -D tailwindcss@3 postcss autoprefixer daisyui@4.12.23
-    npm install react-icons --save
-    npx tailwindcss init -p
-    npm run dev
+    npm install socket.io-client
     ```
 
---- 
+---
+
+## Send Message Functionality
+
+This application enables users to send text messages to each other in real-time. The message sending process involves both frontend and backend components working together seamlessly.
+
+**Frontend Implementation:**
+
+-   The `MessageInput.jsx` component provides an input field and a send button.
+-   The `useSendMessages.js` hook is responsible for sending the message to the backend API.
+-   Upon successfully sending the message, the new message is added to the local state using Zustand.
+
+**Backend Implementation:**
+
+-   The `sendMessage` function in `message.controller.js` handles the message creation and storage in MongoDB.
+-   Socket.IO is used to emit the new message to the recipient in real-time.
+
+## Socket.IO Implementation
+
+Socket.IO is used to provide real-time communication features in this application. It enables instant message delivery and online status updates.
+
+**Backend Setup:**
+
+-   The Socket.IO server is initialized in `socket/socket.js`.
+-   It listens for new connections and manages user online status.
+-   When a new message is sent, the server emits the message to the intended recipient.
+
+**Frontend Setup:**
+
+-   The `SocketContext.jsx` provides the Socket.IO client instance to the entire application.
+-   It connects to the Socket.IO server upon authentication.
+-   The `useListenMessages.js` hook listens for incoming messages and updates the local state using Zustand.
+
+---
 
 ## API Endpoints
 
