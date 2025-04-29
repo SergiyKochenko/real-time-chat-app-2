@@ -9,7 +9,7 @@ A real-time chat application allowing users to communicate instantly. Built usin
 
 ## Am I Responsive?
 
-![Am I Responsive](frontend\src\assets\amiresponsive.png)
+![Am I Responsive](amiresponsive.png)
 
 The application is fully responsive and works seamlessly across devices, including desktops, tablets, and mobile phones.
 
