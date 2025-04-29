@@ -1,4 +1,4 @@
-# Chat App
+# Real-Time Chat App
 
 A real-time chat application allowing users to communicate instantly. Built using the MERN stack (MongoDB, Express, React, Node.js) and Socket.IO for real-time web socket communication.
 
@@ -19,7 +19,7 @@ You can test the responsiveness of the application using the [Am I Responsive?](
 
 ## Table of Contents
 
-- [Chat App](#chat-app)
+- [Real-Time Chat App](#real-time-chat-app)
   - [Am I Responsive?](#am-i-responsive)
   - [Table of Contents](#table-of-contents)
   - [Project Goals](#project-goals)
@@ -198,7 +198,23 @@ The Home Page UI has been completed with the following features:
 
 ### Manual Testing
 
-*(Provide a table or list of manual tests performed.)*
+The application was thoroughly tested during development and after deployment to ensure all features work as expected. The table below summarizes the manual testing results:
+
+| Goals/Actions                          | As a Guest | As a Logged User | Result | Comment                                                                 |
+|----------------------------------------|:----------:|:----------------:|:------:|-------------------------------------------------------------------------|
+| User can access the home page          |    ✓       |        ✓         | Pass   | The home page loads successfully for both guests and logged-in users.   |
+| User can register an account           |    ✓       |        ✓         | Pass   | The registration form works correctly and creates a new user account.   |
+| User can log in                        |    ✓       |        ✓         | Pass   | Users can log in with valid credentials.                                |
+| User can log out                       |    ✗       |        ✓         | Pass   | The logout button clears the session and redirects to the login page.   |
+| User can view the chat interface       |    ✗       |        ✓         | Pass   | The chat interface is accessible only to logged-in users.               |
+| User can send messages                 |    ✗       |        ✓         | Pass   | Messages are sent and displayed in real-time using Socket.IO.           |
+| User can receive messages              |    ✗       |        ✓         | Pass   | Incoming messages are displayed instantly in the chat interface.        |
+| User can view online users             |    ✗       |        ✓         | Pass   | The sidebar displays a list of online users.                            |
+| User can update their profile picture  |    ✗       |        ✓         | Pass   | Users images upload and update their profile automaticaly.   |
+| User can view conversations in sidebar |    ✗       |        ✓         | Pass   | The sidebar displays a list of conversations for logged-in users.       |
+| User can search for conversations      |    ✗       |        ✓         | Pass   | The search input filters conversations in real-time.                    |
+| User can view a conversation's messages|    ✗       |        ✓         | Pass   | Clicking a conversation displays its messages in the chat interface.    |
+| User can view responsive design        |    ✓       |        ✓         | Pass   | The application is fully responsive across devices.                     |
 
 ### Validator Testing
 
