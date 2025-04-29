@@ -1,9 +1,9 @@
-# Chat App
+# Real-Time Chat App
 
 A real-time chat application allowing users to communicate instantly. Built using the MERN stack (MongoDB, Express, React, Node.js) and Socket.IO for real-time web socket communication.
 
-[View Live Demo](https://...)  
-[View Repository](https://...)
+[View Live Demo](https://real-time-chat-app-production-mdoy.onrender.com/)  
+[View Repository](https://github.com/SergiyKochenko/real-time-chat-app-2)
 
 ---
 
@@ -17,7 +17,7 @@ The application is fully responsive and works seamlessly across devices, includi
 
 ## Table of Contents
 
-- [Chat App](#chat-app)
+- [Real-Time Chat App](#real-time-chat-app)
   - [Am I Responsive?](#am-i-responsive)
   - [Table of Contents](#table-of-contents)
   - [Project Goals](#project-goals)
@@ -43,10 +43,6 @@ The application is fully responsive and works seamlessly across devices, includi
     - [Performance Testing](#performance-testing)
     - [Known Bugs](#known-bugs)
   - [Deployment](#deployment)
-    - [Preparation for Deployment](#preparation-for-deployment)
-    - [Backend Deployment](#backend-deployment)
-    - [Frontend Deployment](#frontend-deployment)
-    - [Completed Deployment](#completed-deployment)
   - [Local Development](#local-development)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -218,25 +214,28 @@ The Home Page UI has been completed with the following features:
 
 ## Deployment
 
-### Preparation for Deployment
+The application is deployed and hosted on [Render](https://render.com). Below are the steps to deploy the application:
 
-*(Provide steps for preparing the application for deployment.)*
+1. **Backend Deployment**:
+   - Ensure the `backend` folder is configured with environment variables in a `.env` file.
+   - Use the Render dashboard to create a new web service.
+   - Connect the repository and specify the `backend` folder as the root directory.
+   - Set the build command to `npm install` and the start command to `npm run server`.
 
-### Backend Deployment
+2. **Frontend Deployment**:
+   - Build the frontend using `npm run build` in the `frontend` folder.
+   - Deploy the `frontend/dist` folder to a static hosting service like Netlify or Vercel.
 
-*(Specify the platform used, e.g., Render, Heroku, and the steps involved.)*
+3. **Environment Variables**:
+   - Ensure the following environment variables are set:
+     - `PORT`
+     - `MONGO_DB_URI`
+     - `JWT_SECRET`
 
-### Frontend Deployment
+4. **Socket.IO Configuration**:
+   - Ensure the backend and frontend are configured to use the same Socket.IO server URL.
 
-*(Specify the platform used, e.g., Vercel, Netlify, and the steps involved.)*
-
-### Completed Deployment
-
-The application has been successfully deployed and is live at:  
-**[https://....](https://....)**
-
-The source code is available at:  
-**[https://github.com...](https://github.com....)**
+[View Live Demo](https://real-time-chat-app-production-mdoy.onrender.com)
 
 ---
 
