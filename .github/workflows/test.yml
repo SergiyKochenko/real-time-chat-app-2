@@ -1,0 +1,32 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm install supertest jest dotenv
+      - run: npx jest backend/tests --detectOpenHandles --forceExit
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --prefix frontend
+      - run: npm install --prefix frontend @testing-library/react jest
+      - run: npx jest frontend/src/__tests__ --detectOpenHandles --forceExit

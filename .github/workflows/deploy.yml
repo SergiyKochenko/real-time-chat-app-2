@@ -1,0 +1,37 @@
+name: Deploy to Kubernetes
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment (dev/staging/prod)'
+        required: true
+      image_tag:
+        description: 'Image tag to deploy (e.g., v1.0.0)'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Set up Kubeconfig
+        run: echo "$KUBE_CONFIG" > kubeconfig.yaml
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_${{ github.event.inputs.environment | upper }} }}
+
+      - name: Update image tags in manifest
+        run: |
+          sed -i "s|<your-registry>/chat-backend:latest|${{ secrets.DOCKER_REPO }}/chat-backend:${{ github.event.inputs.image_tag }}|g" docs/deployment-manifest-example.yaml
+          sed -i "s|<your-registry>/chat-frontend:latest|${{ secrets.DOCKER_REPO }}/chat-frontend:${{ github.event.inputs.image_tag }}|g" docs/deployment-manifest-example.yaml
+
+      - name: Deploy to Kubernetes
+        run: kubectl --kubeconfig=kubeconfig.yaml apply -f docs/deployment-manifest-example.yaml

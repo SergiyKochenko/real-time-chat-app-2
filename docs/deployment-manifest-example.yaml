@@ -1,0 +1,74 @@
+# Example Kubernetes deployment manifest for chat app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chat-backend
+  template:
+    metadata:
+      labels:
+        app: chat-backend
+    spec:
+      containers:
+        - name: backend
+          image: <your-registry>/chat-backend:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MONGO_DB_URI
+              value: "mongodb://mongo:27017/chat"
+            - name: JWT_SECRET
+              value: "your_jwt_secret"
+            - name: PORT
+              value: "5000"
+            - name: NODE_ENV
+              value: "production"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chat-frontend
+  template:
+    metadata:
+      labels:
+        app: chat-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: <your-registry>/chat-frontend:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-backend
+spec:
+  selector:
+    app: chat-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-frontend
+spec:
+  selector:
+    app: chat-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
