@@ -24,14 +24,22 @@ jobs:
           version: 'latest'
 
       - name: Set up Kubeconfig
-        run: echo "$KUBE_CONFIG" > kubeconfig.yaml
         env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_${{ github.event.inputs.environment | upper }} }}
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          if [ -z "$KUBE_CONFIG" ]; then
+            echo "KUBE_CONFIG secret not configured for this environment" >&2
+            exit 1
+          fi
+          echo "$KUBE_CONFIG" > kubeconfig.yaml
 
       - name: Update image tags in manifest
+        env:
+          DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         run: |
-          sed -i "s|<your-registry>/chat-backend:latest|${{ secrets.DOCKER_REPO }}/chat-backend:${{ github.event.inputs.image_tag }}|g" docs/deployment-manifest-example.yaml
-          sed -i "s|<your-registry>/chat-frontend:latest|${{ secrets.DOCKER_REPO }}/chat-frontend:${{ github.event.inputs.image_tag }}|g" docs/deployment-manifest-example.yaml
+          sed -i "s|<your-registry>/chat-backend:latest|$DOCKER_REPO/chat-backend:$IMAGE_TAG|g" docs/deployment-manifest-example.yaml
+          sed -i "s|<your-registry>/chat-frontend:latest|$DOCKER_REPO/chat-frontend:$IMAGE_TAG|g" docs/deployment-manifest-example.yaml
 
       - name: Deploy to Kubernetes
         run: kubectl --kubeconfig=kubeconfig.yaml apply -f docs/deployment-manifest-example.yaml
