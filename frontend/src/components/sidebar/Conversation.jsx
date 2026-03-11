@@ -1,5 +1,6 @@
 import { useSocketContext } from "../../context/SocketContext";
 import useConversation from "../../zustand/useConversation";
+import defaultAvatar from "../../assets/default-avatar.svg";
 
 const Conversation = ({ conversation, lastIdx, emoji }) => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
@@ -7,6 +8,12 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 	const isSelected = selectedConversation?._id === conversation._id;
 	const { onlineUsers } = useSocketContext();
 	const isOnline = onlineUsers.includes(conversation._id);
+	const avatarSrc = conversation.profilePic || defaultAvatar;
+
+	const handleAvatarError = (event) => {
+		event.target.onerror = null;
+		event.target.src = defaultAvatar;
+	};
 
 	return (
 		<>
@@ -17,7 +24,8 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 				<div className={`avatar ${isOnline ? "online" : ""}`}>
 					<div className='w-12 rounded-full'>
 						<img
-							src={conversation.profilePic}
+							src={avatarSrc}
+							onError={handleAvatarError}
 							alt='user avatar'
 						/>
 					</div>

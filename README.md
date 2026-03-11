@@ -249,6 +249,7 @@ The application is deployed and hosted on [Render](https://render.com). Below ar
      - `PORT`
      - `MONGO_DB_URI`
      - `JWT_SECRET`
+     - `AVATAR_TEMPLATE_URL` (optional) — points to the remote provider that generates profile images.
 
 4. **Socket.IO Configuration**:
    - Ensure the backend and frontend are configured to use the same Socket.IO server URL.
@@ -300,12 +301,19 @@ The application is deployed and hosted on [Render](https://render.com). Below ar
       MONGO_DB_URI=<your_mongodb_connection_string>
       ```
 
-6. Start the backend server:
+6. Avatar Provider (optional but recommended):
+    - Configure a remote avatar generator by adding the template URL to `.env`:
+      ```
+      AVATAR_TEMPLATE_URL=https://avatar.iran.liara.run/public/{{genderPath}}?username={{username}}
+      ```
+    - Replace the URL with any service that accepts `{{username}}` and `{{genderPath}}` (values `boy`/`girl`) placeholders.
+
+7. Start the backend server:
     ```bash
     npm run server
     ```
 
-7. Frontend Setup:
+8. Frontend Setup:
     ```bash
     cd ../frontend
     npm install
@@ -524,11 +532,18 @@ All routes (Signup, Login, Logout) were tested using [Postman](https://www.postm
 
 ## Avatar Placeholder
 
-The application uses the following service for generating profile pictures:  
-[https://avatar-placeholder.iran.liara.run/](https://avatar-placeholder.iran.liara.run/)
+The application uses a configurable avatar template defined via the `AVATAR_TEMPLATE_URL` environment variable. The default configuration points to the public service at [https://avatar-placeholder.iran.liara.run/](https://avatar-placeholder.iran.liara.run/).
 
-- Male Avatar: `https://avatar.iran.liara.run/public/boy?username=<username>`
-- Female Avatar: `https://avatar.iran.liara.run/public/girl?username=<username>`
+Default template:
+
+```
+https://avatar.iran.liara.run/public/{{genderPath}}?username={{username}}
+```
+
+- `{{genderPath}}` resolves to `boy` or `girl` depending on the user profile.
+- `{{username}}` is URL-encoded before being substituted, ensuring unique avatars per user.
+
+To use another provider, update `AVATAR_TEMPLATE_URL` with that service’s URL pattern and keep the placeholders (or adapt the regex by editing `backend/utils/avatar.js`).
 
 ---
 
