@@ -17,7 +17,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Run backend vitest suite
-        run: npm run test -- --runInBand
+        run: npm run test
 
   frontend-tests:
     runs-on: ubuntu-latest
@@ -29,4 +29,4 @@ jobs:
           cache: npm
       - run: npm ci --prefix frontend
       - name: Run frontend vitest suite
-        run: npm run test --prefix frontend -- --runInBand
+        run: npm run test --prefix frontend
