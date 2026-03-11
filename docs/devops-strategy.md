@@ -30,6 +30,16 @@
   - SRE: 99.9% SLO; burn alerts when ≥25% of budget consumed; MTTR from incident timeline.
   - CI: median/95th percentile duration; cache hit rate; queue time.
 
+### Measurement & Baseline Plan
+| Metric | Baseline assumption (Q1 FY26) | Target | Instrumentation & cadence |
+| --- | --- | --- | --- |
+| Deployment frequency | 1 deploy/day triggered manually | ≥3 prod deploys/day | GitHub Actions deployment events exported to Insights dashboard daily |
+| Lead time for change | 4 hours (merge→prod) because of manual approvals | <1 hour median | Workflow telemetry via GitHub Actions API, charted weekly |
+| Change failure rate | 20% of deploys flagged during manual testing | ≤10% with steady downward trend | Incident labels on release issues + PagerDuty postmortems reviewed per sprint |
+| MTTR | 90 minutes average | <30 minutes | Incident timeline in Statuspage + PagerDuty, reviewed in ops retro |
+| Availability SLO | 99.5% with ad-hoc monitoring | 99.9% with 4h budget | Azure Monitor / App Insights SLO workbook evaluated weekly and on breach |
+| CI health | 80% success, 15 min median duration | ≥95% success, <8 min median | GitHub Actions workflow metrics + Datadog monitor for queue/duration, inspected daily |
+
 ## 4. Branching Strategy & Integration Controls
 - **Model**: Trunk-based.
   - `main`: protected, always releasable.
@@ -42,7 +52,36 @@
   - Checks: frontend lint/build, backend install/build, security scan (template), SBOM + image scan (when containerized), secret scanning enabled.
   - PR hygiene: max ~300 LOC; include test evidence; link issue; draft PRs allowed for early feedback.
   - Commit style: Conventional Commits to enable automated changelog/versioning.
-- **Text diagram**: `feat/* -> PR -> main -> tag (vX.Y.Z) -> release/vX.Y if needed -> deploy dev/stage/prod`
+- **Review enablement**: CODEOWNERS lives in [.github/CODEOWNERS](.github/CODEOWNERS); reviewers apply the checklist in [docs/review-checklist.md](docs/review-checklist.md) and record CI evidence in the PR template.
+- **Required checks**: `ci`, `frontend-tests`, `backend-tests` (when added), `security`, and `release-dry-run` must all succeed before merge; branch rules block bypassing via admin override without RCA.
+- **Visual flow**:
+
+```mermaid
+flowchart LR
+  subgraph Dev Team
+    A[Short-lived branch]
+  end
+  subgraph GitHub
+    B[Pull Request]
+    C[Protected main]
+    D[Release/vX.Y]
+  end
+  subgraph Actions
+    E[CI Workflow]
+    F[Test Workflow]
+    G[Security Workflow]
+    H[Release Workflow]
+  end
+  subgraph Environments
+    I[Dev]
+    J[Staging]
+    K[Prod]
+  end
+
+  A --> B --> E --> F --> G --> B
+  B -->|approved + checks| C --> H --> D
+  D --> I --> J --> K
+```
 
 ## 5. CI Plan (GitHub Actions)
 - **Triggers**: PRs to `main`; push to `main`; manual `workflow_dispatch`.
@@ -71,14 +110,34 @@
 - **Rollback**: Revert to previous image digest/tag; keep N-2 releases available. DB migrations reversible or split into expand/contract.
 - **Documentation**: Release notes auto-generated; include deployment outcomes and incidents.
 
-## 8. Toolchain Choices (justification summary)
-- **SCM/Reviews**: GitHub, protected branches, CODEOWNERS, required reviewers.
-- **CI/CD**: GitHub Actions (native, marketplace ecosystem, environments/approvals).
-- **Build**: Node 20 LTS; pnpm optional later; Vite for frontend; Docker/OCI with BuildKit for deployable artifacts.
-- **Testing**: Frontend lint + future unit/e2e (Vitest/Testing Library or Playwright); Backend unit/integration (Jest/Vitest + Supertest); load testing (k6/Artillery) pre-prod.
-- **Security**: Dependabot updates; npm audit or Snyk SCA; Semgrep SAST; Gitleaks secret scan; Trivy image scan; SBOM via Syft.
-- **Observability**: OpenTelemetry; central logs/metrics/traces (e.g., Azure Monitor/App Insights); synthetic checks; alert routing to Slack/Teams.
-- **Infra/IaC**: Terraform/Bicep for cloud infra; kustomize/Helm for K8s overlays; environment config via variables/secrets.
+## 8. Toolchain Choices (comparative view)
+| Category | Primary tooling | Key alternatives evaluated | Rationale |
+| --- | --- | --- | --- |
+| SCM & Code Reviews | GitHub + CODEOWNERS + branch protections | GitLab, Bitbucket Cloud | Native integration with Actions, ubiquitous developer familiarity, CODEOWNERS automation, lower administrative overhead vs. GitLab self-hosting |
+| CI/CD Orchestration | GitHub Actions reusable workflows + environments | Azure DevOps Pipelines, CircleCI | First-class repo integration, composite actions for reuse, environment protection rules, OIDC support without extra secrets |
+| Build & Artifacts | Node 20 + npm workspaces, Vite, Docker BuildKit, GHCR | pnpm, Yarn 4, Cloud Native Buildpacks | Node 20 aligns with LTS support; BuildKit + GHCR keeps immutable digests and supports cached layers without extra SaaS cost |
+| Testing Stack | Vitest + Testing Library + Playwright roadmap; Supertest for API | Jest, Cypress, Mocha | Vitest faster with native Vite integration; Playwright supports cross-browser, while Supertest keeps API tests close to Express app |
+| Security & Compliance | Dependabot, npm audit, Semgrep, Gitleaks, Trivy, Syft SBOM | Snyk, GitGuardian, Anchore | Combination covers SCA, SAST, secret scanning, container/image scanning using OSS tools; avoids extra licensing while meeting policy |
+| Observability & Incident Mgmt | OpenTelemetry SDKs + Azure Monitor/App Insights dashboards + PagerDuty | Datadog, New Relic, Opsgenie | Azure-native stack minimizes integration friction for container app hosting; retains vendor-neutral telemetry via OTLP |
+| Infrastructure & Config mgmt | Terraform/Bicep for IaC, Kustomize/Helm overlays, GitOps promotion | Pulumi, Ansible, Flux CD | Terraform/Bicep align with Azure; Kustomize/Helm support K8s overlays; GitOps keeps declarative state and audit trail |
+| Collaboration & Knowledge Sharing | Markdown runbooks, ADRs, GitHub Discussions/Projects | Confluence, Notion, Jira | Keeps single source of truth inside repo, version-controlled, and accessible without extra licensing; integrates with PR workflow |
+
+### Toolchain Architecture
+
+```mermaid
+flowchart LR
+  Devs((Developers)) -->|push| Repo[GitHub Repo]
+  Repo -->|PR| Reviews[CODEOWNERS Reviews]
+  Reviews --> ActionsCI[GitHub Actions CI]
+  ActionsCI --> Artifacts[Build Artifacts / SBOM]
+  ActionsCI --> Security[Semgrep/Gitleaks/Trivy]
+  Artifacts --> GHCR[GitHub Container Registry]
+  GHCR --> DeployWF[Release/Deploy Workflows]
+  DeployWF -->|OIDC secrets| AzureEnv[Azure Environments]
+  AzureEnv --> Monitor[Azure Monitor / App Insights]
+  Monitor --> PagerDuty[PagerDuty Alerts]
+  Monitor --> Dashboards[Dashboards / SPACE Surveys]
+```
 
 ## 9. Roles & Responsibilities (RACI outline)
 - Devs: author code, add tests, create PRs, own feature flags, join incident retros.
