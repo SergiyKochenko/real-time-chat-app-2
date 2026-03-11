@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useEffect, useContext } from "react";
 import { useAuthContext } from "./AuthContext";
 import io from "socket.io-client";
@@ -14,27 +15,30 @@ export const SocketContextProvider = ({ children }) => {
 	const { authUser } = useAuthContext();
 
 	useEffect(() => {
-		if (authUser) {
-			const socket = io("https://real-time-chat-app-production-mdoy.onrender.com", {
-				query: {
-					userId: authUser._id,
-				},
+		if (!authUser) {
+			setSocket((prev) => {
+				prev?.close();
+				return null;
 			});
-
-			setSocket(socket);
-
-			// socket.on() is used to listen to the events. can be used both on client and server side
-			socket.on("getOnlineUsers", (users) => {
-				setOnlineUsers(users);
-			});
-
-			return () => socket.close();
-		} else {
-			if (socket) {
-				socket.close();
-				setSocket(null);
-			}
+			setOnlineUsers([]);
+			return undefined;
 		}
+
+		const newSocket = io("https://real-time-chat-app-production-mdoy.onrender.com", {
+			query: {
+				userId: authUser._id,
+			},
+		});
+
+		setSocket(newSocket);
+		newSocket.on("getOnlineUsers", (users) => {
+			setOnlineUsers(users);
+		});
+
+		return () => {
+			newSocket.off("getOnlineUsers");
+			newSocket.close();
+		};
 	}, [authUser]);
 
 	return <SocketContext.Provider value={{ socket, onlineUsers }}>{children}</SocketContext.Provider>;
