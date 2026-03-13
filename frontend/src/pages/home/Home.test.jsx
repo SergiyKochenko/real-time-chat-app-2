@@ -17,7 +17,7 @@ describe("Home page", () => {
   it("renders sidebar and message container", () => {
     render(<Home />);
 
-    expect(screen.getByText("sidebar")).toBeInTheDocument();
-    expect(screen.getByText("messages")).toBeInTheDocument();
+    expect(screen.getByText("sidebar")).not.toBeNull();
+    expect(screen.getByText("messages")).not.toBeNull();
   });
 });

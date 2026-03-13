@@ -35,8 +35,8 @@ describe("Conversations list", () => {
 
     render(<Conversations />);
 
-    expect(screen.getByText("Jane")).toBeInTheDocument();
-    expect(screen.getByText("John")).toBeInTheDocument();
+    expect(screen.getByText("Jane")).not.toBeNull();
+    expect(screen.getByText("John")).not.toBeNull();
   });
 
   it("shows spinner while loading", () => {
@@ -47,6 +47,6 @@ describe("Conversations list", () => {
 
     const { container } = render(<Conversations />);
 
-    expect(container.querySelector(".loading-spinner")).toBeInTheDocument();
+    expect(container.querySelector(".loading-spinner")).not.toBeNull();
   });
 });

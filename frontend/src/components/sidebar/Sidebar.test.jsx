@@ -22,8 +22,8 @@ describe("Sidebar", () => {
   it("renders all child widgets", () => {
     render(<Sidebar />);
 
-    expect(screen.getByText("search-input")).toBeInTheDocument();
-    expect(screen.getByText("conversations")).toBeInTheDocument();
-    expect(screen.getByText("logout")).toBeInTheDocument();
+    expect(screen.getByText("search-input")).not.toBeNull();
+    expect(screen.getByText("conversations")).not.toBeNull();
+    expect(screen.getByText("logout")).not.toBeNull();
   });
 });

@@ -30,6 +30,6 @@ describe("LogoutButton", () => {
 
     const { container } = render(<LogoutButton />);
 
-    expect(container.querySelector(".loading-spinner")).toBeInTheDocument();
+    expect(container.querySelector(".loading-spinner")).not.toBeNull();
   });
 });
