@@ -2,6 +2,8 @@ import React from "react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import MessageContainer from "./MessageContainer.jsx";
+import { AuthContextProvider } from "../../context/AuthContext";
+import { SocketContextProvider } from "../../context/SocketContext";
 
 const useConversationMock = vi.fn();
 const useAuthContextMock = vi.fn();
@@ -21,14 +23,24 @@ vi.mock("./Messages", () => ({
   default: () => <div data-testid="message-list">messages</div>,
 }));
 
-vi.mock("../../context/AuthContext", () => ({
-  useAuthContext: () => useAuthContextMock(),
-}));
+vi.mock("../../context/AuthContext", async () => {
+  const actual = await vi.importActual("../../context/AuthContext");
+  return {
+    ...actual,
+    useAuthContext: () => useAuthContextMock(),
+  };
+});
 
 describe("MessageContainer", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
+
+  const Providers = ({ children }) => (
+    <AuthContextProvider>
+      <SocketContextProvider>{children}</SocketContextProvider>
+    </AuthContextProvider>
+  );
 
   it("renders placeholder when no conversation selected", () => {
     useConversationMock.mockReturnValue({
@@ -37,7 +49,11 @@ describe("MessageContainer", () => {
     });
     useAuthContextMock.mockReturnValue({ authUser: { fullName: "Tester" } });
 
-    render(<MessageContainer />);
+    render(
+      <Providers>
+        <MessageContainer />
+      </Providers>
+    );
 
     expect(screen.getByText(/welcome/i)).toHaveTextContent("Tester");
     expect(screen.queryByTestId("message-input")).toBeNull();
@@ -51,7 +67,11 @@ describe("MessageContainer", () => {
     });
     useAuthContextMock.mockReturnValue({ authUser: { fullName: "Tester" } });
 
-    const { unmount } = render(<MessageContainer />);
+    const { unmount } = render(
+      <Providers>
+        <MessageContainer />
+      </Providers>
+    );
 
     expect(screen.getByText(/To:/i)).toBeInTheDocument();
     expect(screen.getByText("Jane")).toBeInTheDocument();

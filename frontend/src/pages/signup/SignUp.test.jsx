@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import SignUp from "./SignUp.jsx";
+import { AuthContextProvider } from "../../context/AuthContext";
 
 const useSignupMock = vi.fn();
 
@@ -21,18 +22,31 @@ vi.mock("./GenderCheckbox", () => ({
 }));
 
 describe("SignUp page", () => {
+  vi.mock("../../context/AuthContext", async () => {
+    const actual = await vi.importActual("../../context/AuthContext");
+    return {
+      __esModule: true,
+      ...actual,
+    };
+  });
   beforeEach(() => {
     vi.clearAllMocks();
   });
+
+  const Providers = ({ children }) => (
+    <AuthContextProvider>{children}</AuthContextProvider>
+  );
 
   it("submits form values", async () => {
     const signup = vi.fn().mockResolvedValue();
     useSignupMock.mockReturnValue({ loading: false, signup });
 
     render(
-      <MemoryRouter>
-        <SignUp />
-      </MemoryRouter>,
+      <Providers>
+        <MemoryRouter>
+          <SignUp />
+        </MemoryRouter>
+      </Providers>
     );
 
     fireEvent.change(screen.getByPlaceholderText(/full name/i), {

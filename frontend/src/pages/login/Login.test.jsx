@@ -3,27 +3,45 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Login from "./Login.jsx";
+import { AuthContextProvider } from "../../context/AuthContext";
 
 const useLoginMock = vi.fn();
 
-vi.mock("../../hooks/useLogin", () => ({
-  __esModule: true,
-  default: () => useLoginMock(),
-}));
+vi.mock("../../hooks/useLogin", async () => {
+  const actual = await vi.importActual("../../hooks/useLogin");
+  return {
+    __esModule: true,
+    ...actual,
+    default: () => useLoginMock(),
+  };
+});
 
 describe("Login page", () => {
+  vi.mock("../../context/AuthContext", async () => {
+    const actual = await vi.importActual("../../context/AuthContext");
+    return {
+      __esModule: true,
+      ...actual,
+    };
+  });
   beforeEach(() => {
     vi.clearAllMocks();
   });
+
+  const Providers = ({ children }) => (
+    <AuthContextProvider>{children}</AuthContextProvider>
+  );
 
   it("submits credentials", async () => {
     const login = vi.fn().mockResolvedValue();
     useLoginMock.mockReturnValue({ loading: false, login });
 
     render(
-      <MemoryRouter>
-        <Login />
-      </MemoryRouter>,
+      <Providers>
+        <MemoryRouter>
+          <Login />
+        </MemoryRouter>
+      </Providers>
     );
 
     fireEvent.change(screen.getByPlaceholderText(/enter username/i), {

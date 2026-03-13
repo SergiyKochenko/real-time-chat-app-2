@@ -2,35 +2,66 @@ import React from "react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import SearchInput from "./SearchInput.jsx";
+import { AuthContextProvider } from "../../context/AuthContext";
+import { SocketContextProvider } from "../../context/SocketContext";
 
 const useConversationMock = vi.fn();
 const useGetConversationsMock = vi.fn();
 const toastError = vi.fn();
 
-vi.mock("react-hot-toast", () => ({
-  __esModule: true,
-  default: { error: (msg) => toastError(msg) },
-}));
+vi.mock("react-hot-toast", async () => {
+  const actual = await vi.importActual("react-hot-toast");
+  return {
+    __esModule: true,
+    ...actual,
+    default: { error: (msg) => toastError(msg) },
+  };
+});
 
-vi.mock("../../zustand/useConversation", () => ({
-  __esModule: true,
-  default: () => useConversationMock(),
-}));
+vi.mock("../../zustand/useConversation", async () => {
+  const actual = await vi.importActual("../../zustand/useConversation");
+  return {
+    __esModule: true,
+    ...actual,
+    default: () => useConversationMock(),
+  };
+});
 
-vi.mock("../../hooks/useGetConversations", () => ({
-  __esModule: true,
-  default: () => useGetConversationsMock(),
-}));
+vi.mock("../../hooks/useGetConversations", async () => {
+  const actual = await vi.importActual("../../hooks/useGetConversations");
+  return {
+    __esModule: true,
+    ...actual,
+    default: () => useGetConversationsMock(),
+  };
+});
 
 describe("SearchInput", () => {
+  vi.mock("../../context/AuthContext", async () => {
+    const actual = await vi.importActual("../../context/AuthContext");
+    return {
+      __esModule: true,
+      ...actual,
+    };
+  });
   beforeEach(() => {
     vi.clearAllMocks();
     useConversationMock.mockReturnValue({ setSelectedConversation: vi.fn() });
     useGetConversationsMock.mockReturnValue({ conversations: [] });
   });
 
+  const Providers = ({ children }) => (
+    <AuthContextProvider>
+      <SocketContextProvider>{children}</SocketContextProvider>
+    </AuthContextProvider>
+  );
+
   it("validates term length", () => {
-    render(<SearchInput />);
+    render(
+      <Providers>
+        <SearchInput />
+      </Providers>
+    );
 
     fireEvent.change(screen.getByPlaceholderText(/search/i), {
       target: { value: "ab" },
