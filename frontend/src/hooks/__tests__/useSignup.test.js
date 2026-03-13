@@ -3,7 +3,8 @@ import { act, renderHook } from "@testing-library/react";
 import useSignup from "../useSignup.js";
 
 const hoisted = vi.hoisted(() => ({
-  authContextPath: new URL("../../context/AuthContext.jsx", import.meta.url).pathname,
+  authContextPath: new URL("../../context/AuthContext.jsx", import.meta.url)
+    .pathname,
   setAuthUser: vi.fn(),
   toastError: vi.fn(),
 }));
@@ -51,7 +52,9 @@ describe("useSignup", () => {
   });
 
   it("stores auth user on success", async () => {
-    global.fetch.mockResolvedValue({ json: () => Promise.resolve({ token: "abc" }) });
+    global.fetch.mockResolvedValue({
+      json: () => Promise.resolve({ token: "abc" }),
+    });
 
     const { result } = renderHook(() => useSignup());
 
@@ -59,7 +62,10 @@ describe("useSignup", () => {
       await result.current.signup(basePayload);
     });
 
-    expect(setItemSpy).toHaveBeenCalledWith("chat-user", JSON.stringify({ token: "abc" }));
+    expect(setItemSpy).toHaveBeenCalledWith(
+      "chat-user",
+      JSON.stringify({ token: "abc" }),
+    );
     expect(hoisted.setAuthUser).toHaveBeenCalledWith({ token: "abc" });
   });
 });

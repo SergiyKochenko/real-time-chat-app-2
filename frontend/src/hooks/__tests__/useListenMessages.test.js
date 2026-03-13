@@ -3,9 +3,12 @@ import { renderHook } from "@testing-library/react";
 import useListenMessages from "../useListenMessages.js";
 
 const hoisted = vi.hoisted(() => ({
-  socketContextPath: new URL("../../context/SocketContext.jsx", import.meta.url).pathname,
-  conversationPath: new URL("../../zustand/useConversation.js", import.meta.url).pathname,
-  soundPath: new URL("../../assets/sounds/notification.mp3", import.meta.url).pathname,
+  socketContextPath: new URL("../../context/SocketContext.jsx", import.meta.url)
+    .pathname,
+  conversationPath: new URL("../../zustand/useConversation.js", import.meta.url)
+    .pathname,
+  soundPath: new URL("../../assets/sounds/notification.mp3", import.meta.url)
+    .pathname,
   useConversationMock: vi.fn(),
   socketOn: vi.fn(),
   socketOff: vi.fn(),
@@ -13,7 +16,9 @@ const hoisted = vi.hoisted(() => ({
 
 vi.mock(hoisted.socketContextPath, () => ({
   __esModule: true,
-  useSocketContext: () => ({ socket: { on: hoisted.socketOn, off: hoisted.socketOff } }),
+  useSocketContext: () => ({
+    socket: { on: hoisted.socketOn, off: hoisted.socketOff },
+  }),
 }));
 
 vi.mock(hoisted.conversationPath, () => ({
@@ -28,7 +33,10 @@ vi.mock(hoisted.soundPath, () => ({
 describe("useListenMessages", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    hoisted.useConversationMock.mockReturnValue({ messages: [], setMessages: vi.fn() });
+    hoisted.useConversationMock.mockReturnValue({
+      messages: [],
+      setMessages: vi.fn(),
+    });
     vi.spyOn(window, "Audio").mockImplementation(() => ({ play: vi.fn() }));
   });
 

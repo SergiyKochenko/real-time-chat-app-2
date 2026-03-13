@@ -40,7 +40,9 @@ vi.mock("../../utils/generateToken.js", () => ({
 vi.mock("../../utils/avatar.js", () => ({
   __esModule: true,
   buildAvatarUrl: vi.fn(() => "https://avatar/built.png"),
-  ensureAvatarUrl: vi.fn((user) => user.profilePic || "https://avatar/ensured.png"),
+  ensureAvatarUrl: vi.fn(
+    (user) => user.profilePic || "https://avatar/ensured.png",
+  ),
 }));
 
 import User from "../../models/user.model.js";
@@ -89,7 +91,9 @@ describe("auth controller", () => {
       await signup(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: "Username already exists" });
+      expect(res.json).toHaveBeenCalledWith({
+        error: "Username already exists",
+      });
     });
 
     it("creates and returns a new user when data is valid", async () => {
@@ -107,7 +111,10 @@ describe("auth controller", () => {
 
       await signup(req, res);
 
-      expect(generateTokenAndSetCookie).toHaveBeenCalledWith("new-user-id", res);
+      expect(generateTokenAndSetCookie).toHaveBeenCalledWith(
+        "new-user-id",
+        res,
+      );
       expect(saveMock).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
@@ -128,7 +135,9 @@ describe("auth controller", () => {
       await login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ error: "Invalid username or password" });
+      expect(res.json).toHaveBeenCalledWith({
+        error: "Invalid username or password",
+      });
     });
 
     it("returns 200 and user info when credentials are valid", async () => {

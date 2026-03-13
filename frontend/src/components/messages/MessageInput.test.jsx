@@ -32,7 +32,10 @@ describe("MessageInput", () => {
   });
 
   it("shows spinner while loading", () => {
-    useSendMessagesMock.mockReturnValue({ loading: true, sendMessage: vi.fn() });
+    useSendMessagesMock.mockReturnValue({
+      loading: true,
+      sendMessage: vi.fn(),
+    });
 
     const { container } = render(<MessageInput />);
 

@@ -23,11 +23,15 @@ describe("Login page", () => {
     render(
       <MemoryRouter>
         <Login />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    fireEvent.change(screen.getByPlaceholderText(/enter username/i), { target: { value: "jane" } });
-    fireEvent.change(screen.getByPlaceholderText(/enter password/i), { target: { value: "secret" } });
+    fireEvent.change(screen.getByPlaceholderText(/enter username/i), {
+      target: { value: "jane" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/enter password/i), {
+      target: { value: "secret" },
+    });
     fireEvent.click(screen.getByRole("button", { name: /login/i }));
 
     expect(login).toHaveBeenCalledWith("jane", "secret");
@@ -39,7 +43,7 @@ describe("Login page", () => {
     render(
       <MemoryRouter>
         <Login />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByRole("button", { name: /login/i })).toBeDisabled();

@@ -40,7 +40,10 @@ describe("Conversations list", () => {
   });
 
   it("shows spinner while loading", () => {
-    useGetConversationsMock.mockReturnValue({ loading: true, conversations: [] });
+    useGetConversationsMock.mockReturnValue({
+      loading: true,
+      conversations: [],
+    });
 
     const { container } = render(<Conversations />);
 

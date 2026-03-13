@@ -14,7 +14,9 @@ vi.mock("../../hooks/useSignup", () => ({
 vi.mock("./GenderCheckbox", () => ({
   __esModule: true,
   default: ({ selectedGender, onCheckboxChange }) => (
-    <button onClick={() => onCheckboxChange("male")}>gender-{selectedGender || "none"}</button>
+    <button onClick={() => onCheckboxChange("male")}>
+      gender-{selectedGender || "none"}
+    </button>
   ),
 }));
 
@@ -30,13 +32,21 @@ describe("SignUp page", () => {
     render(
       <MemoryRouter>
         <SignUp />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    fireEvent.change(screen.getByPlaceholderText(/full name/i), { target: { value: "Jane" } });
-    fireEvent.change(screen.getByPlaceholderText(/username/i), { target: { value: "jane" } });
-    fireEvent.change(screen.getByPlaceholderText(/enter password/i), { target: { value: "secret123" } });
-    fireEvent.change(screen.getByPlaceholderText(/confirm password/i), { target: { value: "secret123" } });
+    fireEvent.change(screen.getByPlaceholderText(/full name/i), {
+      target: { value: "Jane" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/username/i), {
+      target: { value: "jane" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/enter password/i), {
+      target: { value: "secret123" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/confirm password/i), {
+      target: { value: "secret123" },
+    });
     fireEvent.click(screen.getByText(/gender/i));
 
     fireEvent.click(screen.getByRole("button", { name: /sign up/i }));
@@ -56,7 +66,7 @@ describe("SignUp page", () => {
     render(
       <MemoryRouter>
         <SignUp />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByLabelText(/sign up/i)).toBeDisabled();

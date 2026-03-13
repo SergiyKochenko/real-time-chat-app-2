@@ -37,7 +37,7 @@ describe("Conversation component", () => {
         conversation={{ _id: "1", fullName: "Jane Doe", profilePic: "" }}
         lastIdx={false}
         emoji="😊"
-      />
+      />,
     );
 
     const avatar = screen.getByAltText(/user avatar/i);
@@ -61,7 +61,8 @@ describe("Conversation component", () => {
     fireEvent.click(wrapper);
     expect(setSelectedConversation).toHaveBeenCalledWith(conversation);
 
-    const badge = screen.getByAltText(/user avatar/i).parentElement?.parentElement;
+    const badge =
+      screen.getByAltText(/user avatar/i).parentElement?.parentElement;
     expect(badge?.className).toContain("online");
   });
 });

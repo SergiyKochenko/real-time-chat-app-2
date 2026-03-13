@@ -3,12 +3,14 @@
 > Module: DevOps Pipelines (CA1) — Project: Real-Time Chat App — Platform: GitHub / GitHub Actions
 
 ## 1. Context & Scope
+
 - Team: multi-person (backend, frontend, infra, QA).
 - Services: Node.js backend (Express + Socket.io), React frontend (Vite), MongoDB.
 - Hosting target (recommended): container-based deployment to a managed platform (e.g., Azure Web App for Containers or Kubernetes). Pipelines are GitHub Actions-based.
 - Source of truth: `main` branch; infrastructure, app code, and runbooks live in this repo.
 
 ## 2. Vision, Values, Goals (SMART, DORA-aligned)
+
 - **Vision**: Deliver chat features quickly with high reliability and strong feedback loops.
 - **Values**: automation-first; quality-as-code; security-by-default; transparency; small, reversible changes.
 - **Goals (12-month)**
@@ -20,6 +22,7 @@
   - CI health: ≥95% success; median pipeline ≤8 minutes; flaky test rate <1% of runs.
 
 ## 3. Frameworks & Metrics
+
 - **CAMS mapping**
   - Culture: blameless postmortems; pair reviews; weekly pipeline demos; documented runbooks.
   - Automation: IaC, GitHub Actions workflows, policy-as-code (branch protections), repeatable test data.
@@ -31,16 +34,18 @@
   - CI: median/95th percentile duration; cache hit rate; queue time.
 
 ### Measurement & Baseline Plan
-| Metric | Baseline assumption (Q1 FY26) | Target | Instrumentation & cadence |
-| --- | --- | --- | --- |
-| Deployment frequency | 1 deploy/day triggered manually | ≥3 prod deploys/day | GitHub Actions deployment events exported to Insights dashboard daily |
-| Lead time for change | 4 hours (merge→prod) because of manual approvals | <1 hour median | Workflow telemetry via GitHub Actions API, charted weekly |
-| Change failure rate | 20% of deploys flagged during manual testing | ≤10% with steady downward trend | Incident labels on release issues + PagerDuty postmortems reviewed per sprint |
-| MTTR | 90 minutes average | <30 minutes | Incident timeline in Statuspage + PagerDuty, reviewed in ops retro |
-| Availability SLO | 99.5% with ad-hoc monitoring | 99.9% with 4h budget | Azure Monitor / App Insights SLO workbook evaluated weekly and on breach |
-| CI health | 80% success, 15 min median duration | ≥95% success, <8 min median | GitHub Actions workflow metrics + Datadog monitor for queue/duration, inspected daily |
+
+| Metric               | Baseline assumption (Q1 FY26)                    | Target                          | Instrumentation & cadence                                                             |
+| -------------------- | ------------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------- |
+| Deployment frequency | 1 deploy/day triggered manually                  | ≥3 prod deploys/day             | GitHub Actions deployment events exported to Insights dashboard daily                 |
+| Lead time for change | 4 hours (merge→prod) because of manual approvals | <1 hour median                  | Workflow telemetry via GitHub Actions API, charted weekly                             |
+| Change failure rate  | 20% of deploys flagged during manual testing     | ≤10% with steady downward trend | Incident labels on release issues + PagerDuty postmortems reviewed per sprint         |
+| MTTR                 | 90 minutes average                               | <30 minutes                     | Incident timeline in Statuspage + PagerDuty, reviewed in ops retro                    |
+| Availability SLO     | 99.5% with ad-hoc monitoring                     | 99.9% with 4h budget            | Azure Monitor / App Insights SLO workbook evaluated weekly and on breach              |
+| CI health            | 80% success, 15 min median duration              | ≥95% success, <8 min median     | GitHub Actions workflow metrics + Datadog monitor for queue/duration, inspected daily |
 
 ## 4. Branching Strategy & Integration Controls
+
 - **Model**: Trunk-based.
   - `main`: protected, always releasable.
   - `release/vX.Y`: cut for stabilization; hotfixes merge to tag + back to `main`.
@@ -84,6 +89,7 @@ flowchart LR
 ```
 
 ## 5. CI Plan (GitHub Actions)
+
 - **Triggers**: PRs to `main`; push to `main`; manual `workflow_dispatch`.
 - **Runners**: `ubuntu-latest` hosted; self-hosted optional for heavy caching.
 - **Secrets**: GitHub Environments per stage; prefer OIDC to cloud; never store secrets in repo.
@@ -96,6 +102,7 @@ flowchart LR
 - **Performance target**: <8 minutes median; cancel in-progress on new commits per branch (concurrency control).
 
 ## 6. CD & Environment Strategy
+
 - **Environments**: `dev` (auto deploy), `staging` (approval + smoke), `prod` (approval + change record). Secrets scoped per environment.
 - **Immutable artifacts**: Build once on `main` (publish Docker images or tarballs) and promote by digest/tag.
 - **Deployment patterns**: Prefer blue-green or canary for web apps; feature flags for risky changes; database migrations in expand/contract phases.
@@ -104,6 +111,7 @@ flowchart LR
 - **Release workflow (template)**: Tag `vX.Y.Z` → generate changelog from Conventional Commits → build artifacts → attach to GitHub Release → (optionally) push images to registry.
 
 ## 7. Software Release Strategy
+
 - **Versioning**: Semantic Versioning; `vX.Y.Z` tags; pre-releases `vX.Y.Z-rc.N` on release branches.
 - **Cadence**: Weekly scheduled release; hotfix anytime with post-incident review.
 - **Change control**: Small batches (<1 day of work) to reduce blast radius; feature flags for long-running features.
@@ -111,16 +119,17 @@ flowchart LR
 - **Documentation**: Release notes auto-generated; include deployment outcomes and incidents.
 
 ## 8. Toolchain Choices (comparative view)
-| Category | Primary tooling | Key alternatives evaluated | Rationale |
-| --- | --- | --- | --- |
-| SCM & Code Reviews | GitHub + CODEOWNERS + branch protections | GitLab, Bitbucket Cloud | Native integration with Actions, ubiquitous developer familiarity, CODEOWNERS automation, lower administrative overhead vs. GitLab self-hosting |
-| CI/CD Orchestration | GitHub Actions reusable workflows + environments | Azure DevOps Pipelines, CircleCI | First-class repo integration, composite actions for reuse, environment protection rules, OIDC support without extra secrets |
-| Build & Artifacts | Node 20 + npm workspaces, Vite, Docker BuildKit, GHCR | pnpm, Yarn 4, Cloud Native Buildpacks | Node 20 aligns with LTS support; BuildKit + GHCR keeps immutable digests and supports cached layers without extra SaaS cost |
-| Testing Stack | Vitest + Testing Library + Playwright roadmap; Supertest for API | Jest, Cypress, Mocha | Vitest faster with native Vite integration; Playwright supports cross-browser, while Supertest keeps API tests close to Express app |
-| Security & Compliance | Dependabot, npm audit, Semgrep, Gitleaks, Trivy, Syft SBOM | Snyk, GitGuardian, Anchore | Combination covers SCA, SAST, secret scanning, container/image scanning using OSS tools; avoids extra licensing while meeting policy |
-| Observability & Incident Mgmt | OpenTelemetry SDKs + Azure Monitor/App Insights dashboards + PagerDuty | Datadog, New Relic, Opsgenie | Azure-native stack minimizes integration friction for container app hosting; retains vendor-neutral telemetry via OTLP |
-| Infrastructure & Config mgmt | Terraform/Bicep for IaC, Kustomize/Helm overlays, GitOps promotion | Pulumi, Ansible, Flux CD | Terraform/Bicep align with Azure; Kustomize/Helm support K8s overlays; GitOps keeps declarative state and audit trail |
-| Collaboration & Knowledge Sharing | Markdown runbooks, ADRs, GitHub Discussions/Projects | Confluence, Notion, Jira | Keeps single source of truth inside repo, version-controlled, and accessible without extra licensing; integrates with PR workflow |
+
+| Category                          | Primary tooling                                                        | Key alternatives evaluated            | Rationale                                                                                                                                       |
+| --------------------------------- | ---------------------------------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| SCM & Code Reviews                | GitHub + CODEOWNERS + branch protections                               | GitLab, Bitbucket Cloud               | Native integration with Actions, ubiquitous developer familiarity, CODEOWNERS automation, lower administrative overhead vs. GitLab self-hosting |
+| CI/CD Orchestration               | GitHub Actions reusable workflows + environments                       | Azure DevOps Pipelines, CircleCI      | First-class repo integration, composite actions for reuse, environment protection rules, OIDC support without extra secrets                     |
+| Build & Artifacts                 | Node 20 + npm workspaces, Vite, Docker BuildKit, GHCR                  | pnpm, Yarn 4, Cloud Native Buildpacks | Node 20 aligns with LTS support; BuildKit + GHCR keeps immutable digests and supports cached layers without extra SaaS cost                     |
+| Testing Stack                     | Vitest + Testing Library + Playwright roadmap; Supertest for API       | Jest, Cypress, Mocha                  | Vitest faster with native Vite integration; Playwright supports cross-browser, while Supertest keeps API tests close to Express app             |
+| Security & Compliance             | Dependabot, npm audit, Semgrep, Gitleaks, Trivy, Syft SBOM             | Snyk, GitGuardian, Anchore            | Combination covers SCA, SAST, secret scanning, container/image scanning using OSS tools; avoids extra licensing while meeting policy            |
+| Observability & Incident Mgmt     | OpenTelemetry SDKs + Azure Monitor/App Insights dashboards + PagerDuty | Datadog, New Relic, Opsgenie          | Azure-native stack minimizes integration friction for container app hosting; retains vendor-neutral telemetry via OTLP                          |
+| Infrastructure & Config mgmt      | Terraform/Bicep for IaC, Kustomize/Helm overlays, GitOps promotion     | Pulumi, Ansible, Flux CD              | Terraform/Bicep align with Azure; Kustomize/Helm support K8s overlays; GitOps keeps declarative state and audit trail                           |
+| Collaboration & Knowledge Sharing | Markdown runbooks, ADRs, GitHub Discussions/Projects                   | Confluence, Notion, Jira              | Keeps single source of truth inside repo, version-controlled, and accessible without extra licensing; integrates with PR workflow               |
 
 ### Toolchain Architecture
 
@@ -140,12 +149,14 @@ flowchart LR
 ```
 
 ## 9. Roles & Responsibilities (RACI outline)
+
 - Devs: author code, add tests, create PRs, own feature flags, join incident retros.
 - Tech Lead: approves risky changes, curates CODEOWNERS, owns architecture decisions.
 - DevOps/Infra: maintains Actions workflows, secrets, environments, and IaC.
 - QA/Peer Reviewer: enforces review checklist, verifies test evidence, monitors flaky tests.
 
 ## 10. Risks & Mitigations
+
 - Flaky tests → track & quarantine; retry max 1; create tickets.
 - Secrets leakage → enforce secret scanning; OIDC; no secrets in Actions logs.
 - Long pipelines → cache tuning; parallelism; split jobs.
@@ -153,16 +164,18 @@ flowchart LR
 - DB migrations risk → expand/contract with backward compatibility; run in staging first.
 
 ## 11. Implementation Roadmap (near-term)
-1) Enable branch protections and CODEOWNERS.
-2) Land CI workflow (`.github/workflows/ci.yml`).
-3) Add release/build workflow (`.github/workflows/release.yml`) for tagged builds.
-4) Define environments (dev/staging/prod) and store secrets.
-5) Add security scans (Dependabot, Gitleaks, Semgrep) and SBOM/image scan when Dockerfiles are added.
-6) Add automated changelog + semantic versioning; generate releases.
-7) Add test suites (backend + frontend unit/e2e); wire into CI gates.
-8) Document runbooks (deploy, rollback, incident response) and update this strategy quarterly.
+
+1. Enable branch protections and CODEOWNERS.
+2. Land CI workflow (`.github/workflows/ci.yml`).
+3. Add release/build workflow (`.github/workflows/release.yml`) for tagged builds.
+4. Define environments (dev/staging/prod) and store secrets.
+5. Add security scans (Dependabot, Gitleaks, Semgrep) and SBOM/image scan when Dockerfiles are added.
+6. Add automated changelog + semantic versioning; generate releases.
+7. Add test suites (backend + frontend unit/e2e); wire into CI gates.
+8. Document runbooks (deploy, rollback, incident response) and update this strategy quarterly.
 
 ## 12. Review Checklist (summary)
+
 - Tests added/updated; evidence in PR.
 - Security: secrets not logged; dependencies reviewed; auth/session impacts considered.
 - Observability: logs/metrics/traces added for new flows.
@@ -170,4 +183,5 @@ flowchart LR
 - Docs: README or runbooks updated if behavior changes.
 
 ---
+
 This strategy is tailored to GitHub Actions and the current Node/React/Mongo stack and can be evolved as the system grows.

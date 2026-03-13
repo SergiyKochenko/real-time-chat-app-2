@@ -3,11 +3,11 @@ name: Release Build
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version tag (vX.Y.Z) when manually triggering'
+        description: "Version tag (vX.Y.Z) when manually triggering"
         required: false
 
 concurrency:

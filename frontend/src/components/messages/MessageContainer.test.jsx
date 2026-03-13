@@ -59,6 +59,8 @@ describe("MessageContainer", () => {
     expect(screen.getByTestId("message-list")).toBeInTheDocument();
 
     unmount();
-    await waitFor(() => expect(setSelectedConversation).toHaveBeenCalledWith(null));
+    await waitFor(() =>
+      expect(setSelectedConversation).toHaveBeenCalledWith(null),
+    );
   });
 });

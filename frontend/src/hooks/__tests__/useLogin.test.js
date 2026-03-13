@@ -3,7 +3,8 @@ import { renderHook, act } from "@testing-library/react";
 import useLogin from "../useLogin.js";
 
 const hoisted = vi.hoisted(() => ({
-  authContextPath: new URL("../../context/AuthContext.jsx", import.meta.url).pathname,
+  authContextPath: new URL("../../context/AuthContext.jsx", import.meta.url)
+    .pathname,
   setAuthUser: vi.fn(),
   toastError: vi.fn(),
 }));
@@ -38,12 +39,16 @@ describe("useLogin", () => {
       await result.current.login("", "");
     });
 
-    expect(hoisted.toastError).toHaveBeenCalledWith("Please fill in all fields");
+    expect(hoisted.toastError).toHaveBeenCalledWith(
+      "Please fill in all fields",
+    );
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
   it("stores auth user on success", async () => {
-    global.fetch.mockResolvedValue({ json: () => Promise.resolve({ token: "abc" }) });
+    global.fetch.mockResolvedValue({
+      json: () => Promise.resolve({ token: "abc" }),
+    });
 
     const { result } = renderHook(() => useLogin());
 
@@ -53,7 +58,7 @@ describe("useLogin", () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       "/api/auth/login",
-      expect.objectContaining({ method: "POST" })
+      expect.objectContaining({ method: "POST" }),
     );
     expect(setItemSpy).toHaveBeenCalled();
     expect(hoisted.setAuthUser).toHaveBeenCalledWith({ token: "abc" });

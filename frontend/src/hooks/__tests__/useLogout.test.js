@@ -3,7 +3,8 @@ import { renderHook, act } from "@testing-library/react";
 import useLogout from "../useLogout.js";
 
 const hoisted = vi.hoisted(() => ({
-  authContextPath: new URL("../../context/AuthContext.jsx", import.meta.url).pathname,
+  authContextPath: new URL("../../context/AuthContext.jsx", import.meta.url)
+    .pathname,
   setAuthUser: vi.fn(),
   toastError: vi.fn(),
 }));
@@ -32,7 +33,9 @@ describe("useLogout", () => {
   });
 
   it("clears auth state on success", async () => {
-    global.fetch.mockResolvedValue({ json: () => Promise.resolve({ success: true }) });
+    global.fetch.mockResolvedValue({
+      json: () => Promise.resolve({ success: true }),
+    });
 
     const { result } = renderHook(() => useLogout());
     await act(async () => {
@@ -41,14 +44,16 @@ describe("useLogout", () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       "/api/auth/logout",
-      expect.objectContaining({ method: "POST" })
+      expect.objectContaining({ method: "POST" }),
     );
     expect(removeItemSpy).toHaveBeenCalledWith("chat-user");
     expect(hoisted.setAuthUser).toHaveBeenCalledWith(null);
   });
 
   it("shows toast on failure", async () => {
-    global.fetch.mockResolvedValue({ json: () => Promise.resolve({ error: "Boom" }) });
+    global.fetch.mockResolvedValue({
+      json: () => Promise.resolve({ error: "Boom" }),
+    });
 
     const { result } = renderHook(() => useLogout());
     await act(async () => {

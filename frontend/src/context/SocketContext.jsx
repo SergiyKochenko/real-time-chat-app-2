@@ -6,40 +6,47 @@ import io from "socket.io-client";
 const SocketContext = createContext();
 
 export const useSocketContext = () => {
-	return useContext(SocketContext);
+  return useContext(SocketContext);
 };
 
 export const SocketContextProvider = ({ children }) => {
-	const [socket, setSocket] = useState(null);
-	const [onlineUsers, setOnlineUsers] = useState([]);
-	const { authUser } = useAuthContext();
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const { authUser } = useAuthContext();
 
-	useEffect(() => {
-		if (!authUser) {
-			setSocket((prev) => {
-				prev?.close();
-				return null;
-			});
-			setOnlineUsers([]);
-			return undefined;
-		}
+  useEffect(() => {
+    if (!authUser) {
+      setSocket((prev) => {
+        prev?.close();
+        return null;
+      });
+      setOnlineUsers([]);
+      return undefined;
+    }
 
-		const newSocket = io("https://real-time-chat-app-production-mdoy.onrender.com", {
-			query: {
-				userId: authUser._id,
-			},
-		});
+    const newSocket = io(
+      "https://real-time-chat-app-production-mdoy.onrender.com",
+      {
+        query: {
+          userId: authUser._id,
+        },
+      },
+    );
 
-		setSocket(newSocket);
-		newSocket.on("getOnlineUsers", (users) => {
-			setOnlineUsers(users);
-		});
+    setSocket(newSocket);
+    newSocket.on("getOnlineUsers", (users) => {
+      setOnlineUsers(users);
+    });
 
-		return () => {
-			newSocket.off("getOnlineUsers");
-			newSocket.close();
-		};
-	}, [authUser]);
+    return () => {
+      newSocket.off("getOnlineUsers");
+      newSocket.close();
+    };
+  }, [authUser]);
 
-	return <SocketContext.Provider value={{ socket, onlineUsers }}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={{ socket, onlineUsers }}>
+      {children}
+    </SocketContext.Provider>
+  );
 };

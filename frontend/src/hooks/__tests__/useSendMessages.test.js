@@ -3,7 +3,10 @@ import { act, renderHook } from "@testing-library/react";
 import useSendMessages from "../useSendMessages.js";
 
 const hoisted = vi.hoisted(() => ({
-  useConversationPath: new URL("../../zustand/useConversation.js", import.meta.url).pathname,
+  useConversationPath: new URL(
+    "../../zustand/useConversation.js",
+    import.meta.url,
+  ).pathname,
   useConversationMock: vi.fn(),
   toastError: vi.fn(),
 }));
@@ -35,7 +38,9 @@ describe("useSendMessages", () => {
       messages: [],
       setMessages,
     });
-    global.fetch.mockResolvedValue({ json: () => Promise.resolve({ _id: "m", message: "hi" }) });
+    global.fetch.mockResolvedValue({
+      json: () => Promise.resolve({ _id: "m", message: "hi" }),
+    });
 
     const { result } = renderHook(() => useSendMessages());
 
@@ -48,7 +53,7 @@ describe("useSendMessages", () => {
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ message: "hi" }),
-      })
+      }),
     );
     expect(setMessages).toHaveBeenCalledWith([{ _id: "m", message: "hi" }]);
   });
@@ -59,7 +64,9 @@ describe("useSendMessages", () => {
       messages: [],
       setMessages: vi.fn(),
     });
-    global.fetch.mockResolvedValue({ json: () => Promise.resolve({ error: "Boom" }) });
+    global.fetch.mockResolvedValue({
+      json: () => Promise.resolve({ error: "Boom" }),
+    });
 
     const { result } = renderHook(() => useSendMessages());
 

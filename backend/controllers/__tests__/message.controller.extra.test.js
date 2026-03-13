@@ -77,7 +77,7 @@ describe("message controller", () => {
     expect(io.to).toHaveBeenCalledWith("socket-1");
     expect(hoistedMocks.emitMock).toHaveBeenCalledWith(
       "newMessage",
-      expect.objectContaining({ message: "hello" })
+      expect.objectContaining({ message: "hello" }),
     );
     expect(res.status).toHaveBeenCalledWith(201);
   });
@@ -96,7 +96,9 @@ describe("message controller", () => {
 
     await sendMessage(req, res);
 
-    expect(Conversation.create).toHaveBeenCalledWith({ participants: ["sender", "receiver"] });
+    expect(Conversation.create).toHaveBeenCalledWith({
+      participants: ["sender", "receiver"],
+    });
     expect(newConversation.messages).toContain("message-id");
     expect(res.status).toHaveBeenCalledWith(201);
   });

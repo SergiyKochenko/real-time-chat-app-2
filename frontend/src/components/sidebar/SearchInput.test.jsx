@@ -32,10 +32,14 @@ describe("SearchInput", () => {
   it("validates term length", () => {
     render(<SearchInput />);
 
-    fireEvent.change(screen.getByPlaceholderText(/search/i), { target: { value: "ab" } });
+    fireEvent.change(screen.getByPlaceholderText(/search/i), {
+      target: { value: "ab" },
+    });
     fireEvent.submit(screen.getByRole("button"));
 
-    expect(toastError).toHaveBeenCalledWith("Search term must be at least 3 characters long");
+    expect(toastError).toHaveBeenCalledWith(
+      "Search term must be at least 3 characters long",
+    );
   });
 
   it("selects matching conversation", () => {
@@ -47,17 +51,24 @@ describe("SearchInput", () => {
 
     render(<SearchInput />);
 
-    fireEvent.change(screen.getByPlaceholderText(/search/i), { target: { value: "jane" } });
+    fireEvent.change(screen.getByPlaceholderText(/search/i), {
+      target: { value: "jane" },
+    });
     fireEvent.submit(screen.getByRole("button"));
 
-    expect(setSelectedConversation).toHaveBeenCalledWith({ _id: "1", fullName: "Jane Doe" });
+    expect(setSelectedConversation).toHaveBeenCalledWith({
+      _id: "1",
+      fullName: "Jane Doe",
+    });
     expect(screen.getByPlaceholderText(/search/i)).toHaveValue("");
   });
 
   it("shows toast when user missing", () => {
     render(<SearchInput />);
 
-    fireEvent.change(screen.getByPlaceholderText(/search/i), { target: { value: "john" } });
+    fireEvent.change(screen.getByPlaceholderText(/search/i), {
+      target: { value: "john" },
+    });
     fireEvent.submit(screen.getByRole("button"));
 
     expect(toastError).toHaveBeenCalledWith("No such user found!");

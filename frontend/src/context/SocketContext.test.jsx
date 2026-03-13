@@ -6,7 +6,11 @@ import { SocketContextProvider, useSocketContext } from "./SocketContext.jsx";
 const onMock = vi.fn();
 const offMock = vi.fn();
 const closeMock = vi.fn();
-const socketFactory = vi.fn(() => ({ on: onMock, off: offMock, close: closeMock }));
+const socketFactory = vi.fn(() => ({
+  on: onMock,
+  off: offMock,
+  close: closeMock,
+}));
 
 vi.mock("socket.io-client", () => ({
   __esModule: true,
@@ -39,12 +43,12 @@ describe("SocketContextProvider", () => {
     const { unmount } = render(
       <SocketContextProvider>
         <TestComponent />
-      </SocketContextProvider>
+      </SocketContextProvider>,
     );
 
     expect(socketFactory).toHaveBeenCalledWith(
       "https://real-time-chat-app-production-mdoy.onrender.com",
-      expect.objectContaining({ query: { userId: "user-1" } })
+      expect.objectContaining({ query: { userId: "user-1" } }),
     );
 
     await act(async () => {

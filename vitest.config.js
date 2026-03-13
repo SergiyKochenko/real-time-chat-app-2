@@ -2,24 +2,33 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
 
-const resolveFromRoot = (pkg) => path.resolve(process.cwd(), "node_modules", pkg);
+const resolveFromRoot = (pkg) =>
+  path.resolve(process.cwd(), "node_modules", pkg);
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
       react: resolveFromRoot("react"),
-      "react/jsx-runtime": path.resolve(process.cwd(), "node_modules", "react", "jsx-runtime.js"),
+      "react/jsx-runtime": path.resolve(
+        process.cwd(),
+        "node_modules",
+        "react",
+        "jsx-runtime.js",
+      ),
       "react-dom": resolveFromRoot("react-dom"),
-      "react-dom/client": path.resolve(process.cwd(), "node_modules", "react-dom", "client.js"),
+      "react-dom/client": path.resolve(
+        process.cwd(),
+        "node_modules",
+        "react-dom",
+        "client.js",
+      ),
     },
     dedupe: ["react", "react-dom"],
   },
   test: {
     environment: "node",
-    environmentMatchGlobs: [
-      ["frontend/**", "jsdom"],
-    ],
+    environmentMatchGlobs: [["frontend/**", "jsdom"]],
     globals: true,
     include: [
       "backend/**/*.{test,spec}.js",

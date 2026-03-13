@@ -34,6 +34,6 @@ app.use((req, res, next) => {
 });
 
 server.listen(PORT, () => {
-	connectToMongoDB();
-	console.log(`Server Running on port ${PORT}`);
+  connectToMongoDB();
+  console.log(`Server Running on port ${PORT}`);
 });
