@@ -6,6 +6,8 @@ import { AuthContextProvider } from "../../context/AuthContext";
 import { SocketContextProvider } from "../../context/SocketContext";
 
 const useConversationMock = vi.fn();
+const toastError = vi.fn();
+const useGetConversationsMock = vi.fn();
 
 vi.mock("react-hot-toast", async () => {
   const actual = await vi.importActual("react-hot-toast");
@@ -40,7 +42,7 @@ describe("SearchInput", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
+  });
   it("validates term length", () => {
     render(
       <Providers>

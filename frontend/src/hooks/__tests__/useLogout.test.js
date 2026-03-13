@@ -9,6 +9,7 @@ const hoisted = vi.hoisted(() => ({
 
 vi.mock(hoisted.authContextPath, () => ({
   // Removed mock for AuthContext, will use real provider
+}));
 
 vi.mock("react-hot-toast", () => ({
   __esModule: true,

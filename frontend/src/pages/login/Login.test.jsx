@@ -4,9 +4,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Login from "./Login.jsx";
 import { AuthContextProvider } from "../../context/AuthContext";
-
-const useLoginMock = vi.fn();
-
 // Removed mock for useLogin, will use real provider
 
 describe("Login page", () => {

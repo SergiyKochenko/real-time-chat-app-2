@@ -4,9 +4,6 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import MessageInput from "./MessageInput.jsx";
 import { AuthContextProvider } from "../../context/AuthContext";
 import { SocketContextProvider } from "../../context/SocketContext";
-
-const useSendMessagesMock = vi.fn();
-
 // Removed mock for useSendMessages, will use real provider
 
 describe("MessageInput", () => {

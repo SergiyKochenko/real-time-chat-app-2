@@ -8,6 +8,7 @@ const hoisted = vi.hoisted(() => ({
 
 vi.mock(hoisted.useConversationPath, () => ({
   // Removed mock for useConversation, will use real provider
+}));
 
 vi.mock("react-hot-toast", () => ({
   __esModule: true,

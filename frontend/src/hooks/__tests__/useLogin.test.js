@@ -9,6 +9,7 @@ const hoisted = vi.hoisted(() => ({
 
 vi.mock(hoisted.authContextPath, () => ({
   // Removed mock for AuthContext, will use real provider
+}));
 
 vi.mock("react-hot-toast", () => ({
   __esModule: true,
@@ -37,8 +38,8 @@ describe("useLogin", () => {
       await result.current.login("", "");
     });
 
-    expect(hoisted.toastError).toHaveBeenCalledWith(
-      "Please fill in all fields",
+        expect(hoisted.toastError).toHaveBeenCalledWith(
+        "Please fill in all fields"
     );
     expect(global.fetch).not.toHaveBeenCalled();
   });

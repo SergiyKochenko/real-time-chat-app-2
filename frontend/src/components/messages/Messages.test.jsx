@@ -4,9 +4,6 @@ import { render, screen } from "@testing-library/react";
 import Messages from "./Messages.jsx";
 import { AuthContextProvider } from "../../context/AuthContext";
 import { SocketContextProvider } from "../../context/SocketContext";
-
-const useGetMessagesMock = vi.fn();
-
 // Removed mock for useGetMessages, will use real provider
 
 vi.mock("../../hooks/useListenMessages", async () => {

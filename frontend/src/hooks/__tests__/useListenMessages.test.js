@@ -22,7 +22,8 @@ vi.mock(hoisted.socketContextPath, () => ({
 }));
 
 vi.mock(hoisted.conversationPath, () => ({
-// Removed mock for useConversation, will use real provider
+  // Removed mock for useConversation, will use real provider
+}));
 
 vi.mock(hoisted.soundPath, () => ({
   default: "sound.mp3",
@@ -42,7 +43,7 @@ describe("useListenMessages", () => {
     });
 
     const wrapper = ({ children }) => <ConversationProvider>{children}</ConversationProvider>;
-    const { result, unmount } = renderHook(() => useListenMessages(), { wrapper });
+    const { unmount } = renderHook(() => useListenMessages(), { wrapper });
 
     const payload = { _id: "1", message: "hello" };
     handler(payload);

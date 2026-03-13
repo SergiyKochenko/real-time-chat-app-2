@@ -4,9 +4,6 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import SignUp from "./SignUp.jsx";
 import { AuthContextProvider } from "../../context/AuthContext";
-
-const useSignupMock = vi.fn();
-
 // Removed mock for useSignup, will use real provider
 
 vi.mock("./GenderCheckbox", () => ({

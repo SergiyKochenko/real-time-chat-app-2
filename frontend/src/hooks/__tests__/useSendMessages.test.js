@@ -7,7 +7,8 @@ const hoisted = vi.hoisted(() => ({
 }));
 
 vi.mock(hoisted.useConversationPath, () => ({
-// Removed mock for useConversation, will use real provider
+  // Removed mock for useConversation, will use real provider
+}));
 
 vi.mock("react-hot-toast", () => ({
   __esModule: true,
@@ -37,7 +38,7 @@ describe("useSendMessages", () => {
       "/api/messages/send/123",
       expect.objectContaining({
         method: "POST",
-        body: JSON.stringify({ message: "hi" }),
+            body: JSON.stringify({ message: "hi" }),
       }),
     );
     // Add assertion for setMessages if needed
