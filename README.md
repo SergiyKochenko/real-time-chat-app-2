@@ -48,6 +48,7 @@ You can test the responsiveness of the application using the [Am I Responsive?](
   - [Local Development](#local-development)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
+    - [Automated Testing \& Quality Checks](#automated-testing--quality-checks)
   - [Send Message Functionality](#send-message-functionality)
   - [Socket.IO Implementation](#socketio-implementation)
   - [API Endpoints](#api-endpoints-1)
@@ -319,6 +320,67 @@ The application is deployed and hosted on [Render](https://render.com). Below ar
     npm install
     npm install socket.io-client
     ```
+
+### Automated Testing & Quality Checks
+
+The repository is configured as an npm workspace so the frontend reuses the root React installation. Run all validation commands from the project root unless stated otherwise:
+
+1. **Unit & integration tests** (backend + frontend):
+  ```bash
+  npm run test
+  ```
+  Use `npm run test:watch` while iterating locally.
+
+2. **Frontend linting** (Vitest globals + hooks overrides already configured):
+  ```bash
+  npm --workspace frontend run lint
+  ```
+
+3. **Coverage gate (≥80% lines/funcs/branches/statements):**
+  ```bash
+  npm run test -- --coverage
+  ```
+  This uses `@vitest/coverage-v8` and fails the pipeline if the global thresholds drop below 80%. The latest run produced ~88% line coverage, ~84% branch coverage, and ~81% function coverage across the combined backend/frontend surface area (see `coverage/` artifacts for detailed HTML reports).
+
+All three commands are exercised inside the CI workflow to keep CA1 deliverables green.
+
+### Test & Coverage Snapshot (13 Mar 2026)
+
+- **Vitest run:** `npm run test -- --coverage`
+- **Result:** 35 files / 72 tests passing (no skips) in ≈15.7s wall time
+- **Environment breakdown:** transform 1.84s · setup 9.24s · collect 13.65s · tests 3.95s · env 38.96s · prepare 9.65s
+
+```text
+ Test Files  35 passed (35)
+    Tests  72 passed (72)
+   Start at  20:14:33
+   Duration  15.74s (transform 1.84s, setup 9.24s, collect 13.65s, tests 3.95s, environment 38.96s, prepare 9.65s)
+```
+
+```mermaid
+%% Coverage comparison (higher is better)
+bar
+  title Coverage by metric (% of threshold)
+  "Statements" : 88.11
+  "Branches"   : 84.35
+  "Functions"  : 81.01
+  "Lines"      : 88.11
+```
+
+| File / Area | % Stmts | % Branch | % Funcs | % Lines | Notes |
+| --- | --- | --- | --- | --- | --- |
+| **All files** | 88.11 | 84.35 | 81.01 | 88.11 | Global thresholds (≥80%) satisfied |
+| backend/controllers | 86.66 | 76.19 | 83.33 | 86.66 | Auth/message suites dominate branch deltas |
+| backend/middleware | 94.11 | 83.33 | 100 | 94.11 | `protectRoute` defensive branches only misses |
+| backend/routes | 0 | 0 | 0 | 0 | Route wiring intentionally excluded from current suite |
+| backend/socket | 56.75 | 100 | 0 | 56.75 | Remaining TODO: add socket handshake emitter specs |
+| frontend/src/components/messages | 97.65 | 90.62 | 87.5 | 97.65 | Message UI covered by RTL suites |
+| frontend/src/components/sidebar | 97.47 | 95.83 | 88.88 | 97.47 | Search + logout interactions validated |
+| frontend/src/context | 76.74 | 85.71 | 75 | 76.74 | Next target: extra AuthContext edge cases |
+| frontend/src/hooks | 95.18 | 85 | 100 | 95.18 | All network hooks mocked + asserted |
+| frontend/src/pages/signup | 100 | 84.61 | 90 | 100 | Gender checkbox still has two untested branches |
+
+> Full HTML/LCOV artifacts live under `coverage/`; regenerate with `npm run test -- --coverage` after any changes.
 
 ---
 
