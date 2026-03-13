@@ -7,14 +7,7 @@ import { SocketContextProvider } from "../../context/SocketContext";
 
 const useGetMessagesMock = vi.fn();
 
-vi.mock("../../hooks/useGetMessages", async () => {
-  const actual = await vi.importActual("../../hooks/useGetMessages");
-  return {
-    __esModule: true,
-    ...actual,
-    default: () => useGetMessagesMock(),
-  };
-});
+// Removed mock for useGetMessages, will use real provider
 
 vi.mock("../../hooks/useListenMessages", async () => {
   const actual = await vi.importActual("../../hooks/useListenMessages");
@@ -44,55 +37,44 @@ vi.mock("../skeletons/MessageSkeleton", async () => {
 });
 
 describe("Messages", () => {
-  vi.mock("../../context/AuthContext", async () => {
-    const actual = await vi.importActual("../../context/AuthContext");
-    return {
-      __esModule: true,
-      ...actual,
-    };
-  });
+  const { ConversationProvider } = require("../../zustand/useConversation");
+  const Providers = ({ children }) => (
+    <ConversationProvider>
+      <AuthContextProvider>
+        <SocketContextProvider>{children}</SocketContextProvider>
+      </AuthContextProvider>
+    </ConversationProvider>
+  );
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  const Providers = ({ children }) => (
-    <AuthContextProvider>
-      <SocketContextProvider>{children}</SocketContextProvider>
-    </AuthContextProvider>
-  );
-
   it("renders skeletons while loading", () => {
-    useGetMessagesMock.mockReturnValue({ loading: true, messages: [] });
-
     render(
       <Providers>
         <Messages />
       </Providers>
     );
-
     expect(screen.getAllByRole("status")).toHaveLength(3);
   });
 
   it("renders message list when available", () => {
-    useGetMessagesMock.mockReturnValue({
-      loading: false,
-      messages: [
-        { _id: "1", message: "hi" },
-        { _id: "2", message: "there" },
-      ],
-    });
-
-    render(<Messages />);
-
+    render(
+      <Providers>
+        <Messages />
+      </Providers>
+    );
+    // Add assertions for default state if needed
     expect(screen.getByText("hi")).toBeInTheDocument();
     expect(screen.getByText("there")).toBeInTheDocument();
   });
 
   it("shows empty state when no messages", () => {
-    useGetMessagesMock.mockReturnValue({ loading: false, messages: [] });
-
-    render(<Messages />);
-
+    render(
+      <Providers>
+        <Messages />
+      </Providers>
+    );
     expect(screen.getByText(/send a message/i)).toBeInTheDocument();
   });
 });

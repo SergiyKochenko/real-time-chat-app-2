@@ -10,7 +10,7 @@ const socketFactory = vi.fn(() => ({
   on: onMock,
   off: offMock,
   close: closeMock,
-}));
+    const { unmount } = render(
 
 vi.mock("socket.io-client", () => ({
   __esModule: true,
@@ -18,11 +18,7 @@ vi.mock("socket.io-client", () => ({
 }));
 
 vi.mock("./AuthContext", () => {
-  const mockAuthUser = { _id: "user-1" };
-  return {
-    useAuthContext: () => ({ authUser: mockAuthUser }),
-  };
-});
+// Removed mock for AuthContext, will use real provider
 
 const TestComponent = () => {
   const { onlineUsers } = useSocketContext();
@@ -30,34 +26,34 @@ const TestComponent = () => {
 };
 
 describe("SocketContextProvider", () => {
+  const { AuthContextProvider } = require("./AuthContext");
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
+});
   it("connects to socket server and updates online users", async () => {
     let handler;
     onMock.mockImplementation((event, cb) => {
       if (event === "getOnlineUsers") handler = cb;
     });
-
     const { unmount } = render(
-      <SocketContextProvider>
-        <TestComponent />
-      </SocketContextProvider>,
+      <AuthContextProvider>
+        <SocketContextProvider>
+          <TestComponent />
+        </SocketContextProvider>
+      </AuthContextProvider>
     );
-
     expect(socketFactory).toHaveBeenCalledWith(
       "https://real-time-chat-app-production-mdoy.onrender.com",
       expect.objectContaining({ query: { userId: "user-1" } }),
     );
-
     await act(async () => {
       handler(["user-1", "user-2"]);
     });
     expect(screen.getByText(/online:user-1,user-2/)).toBeInTheDocument();
-
     unmount();
     expect(offMock).toHaveBeenCalledWith("getOnlineUsers");
     expect(closeMock).toHaveBeenCalled();
   });
-});
+
+

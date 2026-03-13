@@ -3,16 +3,12 @@ import { renderHook, act } from "@testing-library/react";
 import useLogin from "../useLogin.js";
 
 const hoisted = vi.hoisted(() => ({
-  authContextPath: new URL("../../context/AuthContext.jsx", import.meta.url)
-    .pathname,
   setAuthUser: vi.fn(),
   toastError: vi.fn(),
 }));
 
 vi.mock(hoisted.authContextPath, () => ({
-  __esModule: true,
-  useAuthContext: () => ({ setAuthUser: hoisted.setAuthUser }),
-}));
+  // Removed mock for AuthContext, will use real provider
 
 vi.mock("react-hot-toast", () => ({
   __esModule: true,
@@ -21,6 +17,7 @@ vi.mock("react-hot-toast", () => ({
 
 describe("useLogin", () => {
   const setItemSpy = vi.spyOn(window.localStorage.__proto__, "setItem");
+  const { AuthContextProvider } = require("../../context/AuthContext");
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -33,7 +30,8 @@ describe("useLogin", () => {
   });
 
   it("validates inputs", async () => {
-    const { result } = renderHook(() => useLogin());
+    const wrapper = ({ children }) => <AuthContextProvider>{children}</AuthContextProvider>;
+    const { result } = renderHook(() => useLogin(), { wrapper });
 
     await act(async () => {
       await result.current.login("", "");

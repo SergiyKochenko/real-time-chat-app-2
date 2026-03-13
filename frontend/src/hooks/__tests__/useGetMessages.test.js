@@ -3,18 +3,11 @@ import { renderHook, waitFor } from "@testing-library/react";
 import useGetMessages from "../useGetMessages.js";
 
 const hoisted = vi.hoisted(() => ({
-  useConversationPath: new URL(
-    "../../zustand/useConversation.js",
-    import.meta.url,
-  ).pathname,
-  useConversationMock: vi.fn(),
   toastError: vi.fn(),
 }));
 
 vi.mock(hoisted.useConversationPath, () => ({
-  __esModule: true,
-  default: () => hoisted.useConversationMock(),
-}));
+  // Removed mock for useConversation, will use real provider
 
 vi.mock("react-hot-toast", () => ({
   __esModule: true,
@@ -23,6 +16,7 @@ vi.mock("react-hot-toast", () => ({
 
 describe("useGetMessages", () => {
   const setMessages = vi.fn();
+  const { ConversationProvider } = require("../../zustand/useConversation");
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -43,7 +37,8 @@ describe("useGetMessages", () => {
       json: () => Promise.resolve([{ _id: "1" }]),
     });
 
-    const { result } = renderHook(() => useGetMessages());
+    const wrapper = ({ children }) => <ConversationProvider>{children}</ConversationProvider>;
+    const { result } = renderHook(() => useGetMessages(), { wrapper });
 
     await waitFor(() =>
       expect(global.fetch).toHaveBeenCalledWith("/api/messages/abc"),

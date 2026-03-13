@@ -22,21 +22,16 @@ vi.mock(hoisted.socketContextPath, () => ({
 }));
 
 vi.mock(hoisted.conversationPath, () => ({
-  __esModule: true,
-  default: () => hoisted.useConversationMock(),
-}));
+// Removed mock for useConversation, will use real provider
 
 vi.mock(hoisted.soundPath, () => ({
   default: "sound.mp3",
 }));
 
 describe("useListenMessages", () => {
+  const { ConversationProvider } = require("../../zustand/useConversation");
   beforeEach(() => {
     vi.clearAllMocks();
-    hoisted.useConversationMock.mockReturnValue({
-      messages: [],
-      setMessages: vi.fn(),
-    });
     vi.spyOn(window, "Audio").mockImplementation(() => ({ play: vi.fn() }));
   });
 
@@ -46,15 +41,15 @@ describe("useListenMessages", () => {
       if (event === "newMessage") handler = cb;
     });
 
-    const state = { messages: [], setMessages: vi.fn() };
-    hoisted.useConversationMock.mockReturnValue(state);
-
-    const { unmount } = renderHook(() => useListenMessages());
+    const wrapper = ({ children }) => <ConversationProvider>{children}</ConversationProvider>;
+    const { result, unmount } = renderHook(() => useListenMessages(), { wrapper });
 
     const payload = { _id: "1", message: "hello" };
     handler(payload);
 
-    expect(state.setMessages).toHaveBeenCalledWith([payload]);
+    // Access setMessages from context
+    const { setMessages } = require("../../zustand/useConversation").useConversation();
+    expect(setMessages).toHaveBeenCalledWith([payload]);
     expect(payload.shouldShake).toBe(true);
     unmount();
     expect(hoisted.socketOff).toHaveBeenCalledWith("newMessage");

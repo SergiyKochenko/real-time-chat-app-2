@@ -14,12 +14,11 @@ vi.mock("react-hot-toast", () => ({
 }));
 
 describe("useGetConversations", () => {
+  const { ConversationProvider } = require("../zustand/useConversation");
   const originalFetch = global.fetch;
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
-
   afterEach(() => {
     global.fetch = originalFetch;
   });
@@ -29,9 +28,8 @@ describe("useGetConversations", () => {
     global.fetch = vi.fn().mockResolvedValue({
       json: () => Promise.resolve(conversations),
     });
-
-    const { result } = renderHook(() => useGetConversations());
-
+    const wrapper = ({ children }) => <ConversationProvider>{children}</ConversationProvider>;
+    const { result } = renderHook(() => useGetConversations(), { wrapper });
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.conversations).toEqual(conversations);
     expect(global.fetch).toHaveBeenCalledWith("/api/users");
@@ -41,9 +39,8 @@ describe("useGetConversations", () => {
     global.fetch = vi.fn().mockResolvedValue({
       json: () => Promise.resolve({ error: "Boom" }),
     });
-
-    const { result } = renderHook(() => useGetConversations());
-
+    const wrapper = ({ children }) => <ConversationProvider>{children}</ConversationProvider>;
+    const { result } = renderHook(() => useGetConversations(), { wrapper });
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(toastErrorMock).toHaveBeenCalledWith("Boom");
     expect(result.current.conversations).toEqual([]);
