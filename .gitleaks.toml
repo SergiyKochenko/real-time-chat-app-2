@@ -1,0 +1,10 @@
+[rules]
+# Add custom rules here if needed
+
+[allowlist]
+# Add allowlist patterns here if needed
+
+[general]
+# General settings
+redact = true
+report = "results.sarif"
