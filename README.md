@@ -1,4 +1,8 @@
+
 # Real-Time Chat App
+
+![CI](https://github.com/SergiyKochenko/real-time-chat-app-2/actions/workflows/ci.yml/badge.svg)
+![codecov](https://codecov.io/gh/SergiyKochenko/real-time-chat-app-2/branch/main/graph/badge.svg)
 
 A real-time chat application allowing users to communicate instantly. Built using the MERN stack (MongoDB, Express, React, Node.js) and Socket.IO for real-time web socket communication.
 
