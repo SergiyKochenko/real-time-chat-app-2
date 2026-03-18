@@ -1,3 +1,4 @@
+import React from "react";
 import { useSocketContext } from "../../context/SocketContext";
 import useConversation from "../../zustand/useConversation";
 import defaultAvatar from "../../assets/default-avatar.svg";
