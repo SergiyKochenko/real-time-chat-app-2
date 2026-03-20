@@ -60,6 +60,10 @@ jobs:
       JWT_SECRET: ${{ secrets.DEV_JWT_SECRET }}
     steps:
       - uses: actions/checkout@v4
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
       - name: Deploy with Docker Compose (Dev)
         run: |
           docker-compose -f deploy/docker-compose.yml up -d --build
@@ -79,6 +83,10 @@ jobs:
       JWT_SECRET: ${{ secrets.STAGING_JWT_SECRET }}
     steps:
       - uses: actions/checkout@v4
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
       - name: Deploy with Docker Compose (Staging)
         run: |
           docker-compose -f deploy/docker-compose.yml up -d --build
@@ -97,6 +105,10 @@ jobs:
       JWT_SECRET: ${{ secrets.PROD_JWT_SECRET }}
     steps:
       - uses: actions/checkout@v4
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
       - name: Deploy with Docker Compose (Production)
         run: |
           docker-compose -f deploy/docker-compose.yml up -d --build
