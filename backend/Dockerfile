@@ -1,7 +1,7 @@
 # AI-generated Dockerfile for Node.js backend
-FROM node:20-alpine3.24
+FROM node:20-alpine
 WORKDIR /app
-RUN npm install -g npm@latest && npm cache clean --force
+RUN apk upgrade --no-cache && npm install -g npm@latest && npm cache clean --force
 COPY backend/ ./
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
