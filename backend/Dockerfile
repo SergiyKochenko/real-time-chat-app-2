@@ -1,5 +1,5 @@
 # AI-generated Dockerfile for Node.js backend
-FROM node:20-alpine
+FROM node:20-alpine3.24
 WORKDIR /app
 RUN npm install -g npm@latest && npm cache clean --force
 COPY backend/ ./
