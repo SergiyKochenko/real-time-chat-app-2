@@ -10,10 +10,22 @@ on:
         description: "Image tag to deploy (e.g., v1.0.0)"
         required: true
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.inputs.environment }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_BACKEND: real-time-chat-backend
+  IMAGE_FRONTEND: real-time-chat-frontend
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,13 +45,30 @@ jobs:
           fi
           echo "$KUBE_CONFIG" > kubeconfig.yaml
 
-      - name: Update image tags in manifest
+      - name: Compute image references
         env:
-          DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
           IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         run: |
-          sed -i "s|<your-registry>/chat-backend:latest|$DOCKER_REPO/chat-backend:$IMAGE_TAG|g" docs/deployment-manifest-example.yaml
-          sed -i "s|<your-registry>/chat-frontend:latest|$DOCKER_REPO/chat-frontend:$IMAGE_TAG|g" docs/deployment-manifest-example.yaml
+          echo "BACKEND_IMAGE=${REGISTRY}/${GITHUB_REPOSITORY_OWNER}/${IMAGE_BACKEND}:${IMAGE_TAG}" >> $GITHUB_ENV
+          echo "FRONTEND_IMAGE=${REGISTRY}/${GITHUB_REPOSITORY_OWNER}/${IMAGE_FRONTEND}:${IMAGE_TAG}" >> $GITHUB_ENV
+
+      - name: Update image tags in manifest
+        run: |
+          sed -i "s|<your-registry>/chat-backend:latest|${BACKEND_IMAGE}|g" docs/deployment-manifest-example.yaml
+          sed -i "s|<your-registry>/chat-frontend:latest|${FRONTEND_IMAGE}|g" docs/deployment-manifest-example.yaml
 
       - name: Deploy to Kubernetes
         run: kubectl --kubeconfig=kubeconfig.yaml apply -f docs/deployment-manifest-example.yaml
+
+      - name: Wait for rollout (backend)
+        run: kubectl --kubeconfig=kubeconfig.yaml rollout status deployment/chat-backend --timeout=60s || kubectl --kubeconfig=kubeconfig.yaml rollout undo deployment/chat-backend
+
+      - name: Wait for rollout (frontend)
+        run: kubectl --kubeconfig=kubeconfig.yaml rollout status deployment/chat-frontend --timeout=60s || kubectl --kubeconfig=kubeconfig.yaml rollout undo deployment/chat-frontend
+
+      - name: Smoke test service connectivity
+        run: |
+          kubectl --kubeconfig=kubeconfig.yaml run smoke-probe --rm -i --restart=Never --image=busybox:1.36 -- sh -c "
+            nc -zvw3 chat-backend 5000 &&
+            nc -zvw3 chat-frontend 80
+          "

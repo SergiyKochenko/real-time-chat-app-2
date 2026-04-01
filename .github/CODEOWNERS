@@ -1,5 +1,7 @@
-# Update ownership as your team grows. These owners will be requested for review on matching paths.
+# Update ownership as your team grows. Add at least two reviewers per area to support multi-person delivery.
 * @SergiyKochenko
 /backend/ @SergiyKochenko
 /frontend/ @SergiyKochenko
 /.github/ @SergiyKochenko
+/docs/ @SergiyKochenko
+/deploy/ @SergiyKochenko

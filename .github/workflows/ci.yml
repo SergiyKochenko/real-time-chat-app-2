@@ -12,10 +12,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-build-and-test:
+  ci:
+    name: Lint, test, build, coverage
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,20 +31,17 @@ jobs:
             package-lock.json
             frontend/package-lock.json
 
-      - name: Install backend dependencies
+      - name: Install dependencies (root)
         run: npm ci
 
-      - name: Install frontend dependencies
+      - name: Install dependencies (frontend)
         run: npm ci --prefix frontend
 
       - name: Lint (frontend)
         run: npm run lint --prefix frontend
 
-      - name: Test (backend)
-        run: npm run test
-
-      - name: Test (frontend)
-        run: npm run test --prefix frontend
+      - name: Test (backend + frontend)
+        run: npm run test -- --coverage
 
       - name: Build frontend
         run: npm run build --prefix frontend
@@ -50,39 +49,19 @@ jobs:
       - name: Validate backend entrypoint
         run: node -c backend/server.js
 
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info
+          if-no-files-found: error
+
       - name: Upload coverage to Codecov
+        if: success()
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
-
-  security-scans:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Gitleaks (secrets scan)
-        uses: gitleaks/gitleaks-action@v2
-
-      - name: Semgrep (SAST)
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: p/ci
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-
-      - name: Trivy (filesystem scan)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: fs
-          severity: CRITICAL,HIGH
-          ignore-unfixed: true
-          format: table
-          exit-code: 1
-          vuln-type: os,library

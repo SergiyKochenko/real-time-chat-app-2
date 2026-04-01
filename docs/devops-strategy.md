@@ -84,7 +84,7 @@
   - PR hygiene: max ~300 LOC; include test evidence; link issue; draft PRs allowed for early feedback.
   - Commit style: Conventional Commits to enable automated changelog/versioning.
 - **Review enablement**: CODEOWNERS lives in [.github/CODEOWNERS](.github/CODEOWNERS); reviewers apply the checklist in [docs/review-checklist.md](docs/review-checklist.md) and record CI evidence in the PR template.
-- **Required checks**: `ci`, `frontend-tests`, `backend-tests` (when added), `security`, and `release-dry-run` must all succeed before merge; branch rules block bypassing via admin override without RCA.
+- **Required checks**: `CI`, `Security Scans`, and `Release Build` (dry-run on tags) must succeed before merge; branch rules should block bypass without RCA.
 - **Visual flow**:
 
 ```mermaid
@@ -119,15 +119,18 @@ flowchart LR
 
 - **Platform**: All CI/CD is implemented using GitHub Actions, as required by the assignment brief.
 
+- **Workflows**: `CI` (lint/test/build/coverage + Codecov) and `Security Scans` (Semgrep, Gitleaks, Trivy fs + image scan, SBOM via Syft). Legacy `cicd.yml`/`test.yml` are archived to avoid duplicate runs.
+
 - **Triggers**: PRs to `main`; push to `main`; manual `workflow_dispatch`.
 - **Runners**: `ubuntu-latest` hosted; self-hosted optional for heavy caching.
 - **Secrets**: GitHub Environments per stage; prefer OIDC to cloud; never store secrets in repo.
 - **Caching**: `actions/setup-node` npm cache for root and frontend lockfiles; Docker layer cache when container builds are added.
 - **Job graph (ci.yml)**
-  - Checkout → Node 20 → cache → `npm ci` (root) → `npm ci --prefix frontend` → `npm run lint --prefix frontend` → `npm run build --prefix frontend`.
-  - Hook for backend tests when added (e.g., Vitest/Jest + Supertest).
-  - Artifacts: optional upload of `frontend/dist` (not enabled by default in CI to save time).
-- **Quality gates**: CI required on PR; failing checks block merge. Secret scanning and Dependabot enabled via repo settings (manual enable by owner).
+  - Checkout → Node 20 → cache → `npm ci` (root) + `npm ci --prefix frontend` → `npm run lint --prefix frontend` → `npm run test -- --coverage` (backend + frontend via shared Vitest config) → `npm run build --prefix frontend` → Codecov upload of `coverage/lcov.info`.
+  - Coverage thresholds enforced in Vitest config (≥80% lines/funcs/branches/statements).
+  - Artifacts: LCOV uploaded for PR evidence.
+- **Quality gates**: Required checks to protect `main`: `CI`, `Security Scans`, and `Release Build` (dry-run on tags). Secret scanning and Dependabot enabled via repo settings (manual enable by owner).
+- **Changelog/versioning**: `release-please` workflow auto-creates release PRs, semantic versions, tags, and CHANGELOG entries on merges to `main`.
 - **Performance target**: <8 minutes median; cancel in-progress on new commits per branch (concurrency control).
 
 ## 6. CD & Environment Strategy
@@ -138,6 +141,11 @@ flowchart LR
 - **Approvals & audit**: GitHub Environment approvals; production requires two approvers not the author.
 - **Post-deploy**: Smoke tests (HTTP 200, socket handshake); synthetic checks; auto-rollback to prior digest on failure signal; record deployment in releases.
 - **Release workflow (template)**: Tag `vX.Y.Z` → generate changelog from Conventional Commits → build artifacts → attach to GitHub Release → (optionally) push images to registry.
+
+- **Pipelines implemented**:
+  - `release-please.yml`: runs in manifest mode for root and frontend packages, generates release PRs/tags and CHANGELOG entries using Conventional Commits semantics.
+  - `release.yml`: builds/pushes GHCR images for backend/frontend, generates SBOM (Syft) per image, attaches artifacts to GitHub Release.
+  - `deploy.yml`: parameterized `workflow_dispatch` deploy with environment approvals, image tag substitution to GHCR, rollout checks, rollback on failure, and smoke probe (TCP to backend:5000 and frontend:80).
 
 
 ## 7. Software Release Strategy

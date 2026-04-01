@@ -12,14 +12,14 @@ Fixes # (issue)
 - [ ] Documentation update
 
 ## Checklist
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published in downstream modules
+- [ ] Tests added/updated with evidence (command + summary of results)
+- [ ] Coverage impact noted (attach lcov/Codecov link if applicable)
+- [ ] Lint checks pass locally (`npm run lint --prefix frontend`)
+- [ ] Security/secret implications considered (no secrets in code/logs)
+- [ ] Observability updated if behavior changes (logs/metrics/traces)
+- [ ] Rollback/feature flag strategy considered where risky
+- [ ] Documentation/runbooks updated (if behavior or ops changed)
+- [ ] Review checklist followed: see docs/review-checklist.md
 
 ## Screenshots (if applicable)
 

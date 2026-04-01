@@ -1,13 +1,9 @@
 # CI/CD workflow for real-time-chat-app-2
 # Builds and tests both frontend and backend, deploys using Docker Compose
 
-name: CI + CD Pipeline
+name: CI + CD Pipeline (archived)
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
