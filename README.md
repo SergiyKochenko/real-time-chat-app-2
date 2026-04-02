@@ -400,11 +400,13 @@ Code review is used as a quality and learning mechanism, not only a merge gate. 
 
 **GitHub Environments Configuration:**
 
-| Environment | Required Reviewers | Wait Timer | Branch/Tag Restrictions | Sealed Secrets |
-|-------------|-------------------|------------|------------------------|----------------|
-| **dev** | None (auto) | None | main only | Dev-scoped |
-| **staging** | 1 reviewer | 1 hour | Release tags only | Staging-scoped |
-| **production** | 2 reviewers | 4 hours | Signed release tags | Production-scoped |
+The workflow uses GitHub environment names `development`, `staging`, and `production` so the deployment graph can show a clickable environment URL beneath each job. The production environment points to [https://real-time-chat-app-production-mdoy.onrender.com/](https://real-time-chat-app-production-mdoy.onrender.com/).
+
+| Environment | Required Reviewers | Wait Timer | Branch/Tag Restrictions | URL |
+|-------------|-------------------|------------|------------------------|-----|
+| **development** | None (auto) | None | main only | Dev environment URL |
+| **staging** | 1 reviewer | 1 hour | Release tags only | Staging environment URL |
+| **production** | 2 reviewers | 4 hours | Signed release tags | [real-time-chat-app-production-mdoy.onrender.com](https://real-time-chat-app-production-mdoy.onrender.com/) |
 
 **Post-Deploy Verification & Rollback:**
 
@@ -552,27 +554,35 @@ The DevOps strategy evolves from a simple CI-first mindset to a measurable, poli
 
 ## Deployment
 
-The application is deployed and hosted on [Render](https://render.com). Below are the steps to deploy the application:
+The application is deployed through GitHub Actions using environment-specific deployments, with the production site hosted on [Render](https://render.com). The workflow shows the environment link on each deployment job once the run completes, and the production job uses [https://real-time-chat-app-production-mdoy.onrender.com/](https://real-time-chat-app-production-mdoy.onrender.com/).
 
-1. **Backend Deployment**:
-   - Ensure the `backend` folder is configured with environment variables in a `.env` file.
-   - Use the Render dashboard to create a new web service.
-   - Connect the repository and specify the `backend` folder as the root directory.
-   - Set the build command to `npm install` and the start command to `npm run server`.
+1. **Build stage**:
+  - GitHub Actions runs the backend and frontend test/build jobs on pushes to `main`, pull requests, and manual dispatch.
+  - The workflow uploads the production artifact after the build succeeds.
 
-2. **Frontend Deployment**:
-   - Build the frontend using `npm run build` in the `frontend` folder.
-   - Deploy the `frontend/dist` folder to a static hosting service like Netlify or Vercel.
+2. **Development deployment**:
+  - The `development` job deploys automatically after the build stage.
+  - Environment-specific values are supplied through GitHub environment variables and secrets.
 
-3. **Environment Variables**:
-   - Ensure the following environment variables are set:
-     - `PORT`
-     - `MONGO_DB_URI`
-     - `JWT_SECRET`
-     - `AVATAR_TEMPLATE_URL` (optional) — points to the remote provider that generates profile images.
+3. **Staging deployment**:
+  - The `staging` job runs after the build stage and uses the staging environment configuration.
+  - The deployment graph displays the staging environment URL when the job completes successfully.
 
-4. **Socket.IO Configuration**:
-   - Ensure the backend and frontend are configured to use the same Socket.IO server URL.
+4. **Production deployment**:
+  - The `production` job uses the exact Render URL so GitHub Actions can show it under the deployment card.
+  - Production uses environment approvals and branch/tag restrictions before deployment.
+
+5. **Environment variables**:
+  - Ensure the following environment variables are set for the relevant GitHub environments:
+    - `MONGO_DB_URI`
+    - `JWT_SECRET`
+    - `AVATAR_TEMPLATE_URL` (optional) — points to the remote provider that generates profile images.
+    - `DEV_FRONTEND_URL`, `DEV_BACKEND_URL`
+    - `STAGING_FRONTEND_URL`, `STAGING_BACKEND_URL`
+    - `PROD_FRONTEND_URL`, `PROD_BACKEND_URL`
+
+6. **Socket.IO configuration**:
+  - Ensure the backend and frontend are configured to use the same Socket.IO server URL.
 
 [View Live Demo](https://real-time-chat-app-production-mdoy.onrender.com)
 
