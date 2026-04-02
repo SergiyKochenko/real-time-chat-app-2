@@ -51,7 +51,7 @@ jobs:
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
-      name: Development
+      name: ${{ 'development' }}
       url: ${{ vars.DEV_FRONTEND_URL }}
     env:
       NODE_ENV: development
@@ -76,7 +76,7 @@ jobs:
     needs: [ Build ]
     runs-on: ubuntu-latest
     environment:
-      name: Staging
+      name: ${{ 'staging' }}
       url: ${{ vars.STAGING_FRONTEND_URL }}
     env:
       NODE_ENV: staging
@@ -100,7 +100,7 @@ jobs:
     needs: [DeployStaging]
     runs-on: ubuntu-latest
     environment:
-      name: Production
+      name: ${{ 'production' }}
       url: https://real-time-chat-app-production-mdoy.onrender.com/
     env:
       NODE_ENV: production
