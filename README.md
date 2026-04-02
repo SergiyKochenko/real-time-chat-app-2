@@ -10,6 +10,8 @@ A real-time chat application allowing users to communicate instantly. Built usin
 
 ## Am I Responsive?
 
+[Back to table of contents](#table-of-contents)
+
 ![Am I Responsive](amiresponsive.png)
 
 The application is fully responsive and works seamlessly across devices, including desktops, tablets, and mobile phones.
@@ -86,13 +88,19 @@ You can test the responsiveness of the application using the [Am I Responsive?](
 
 ## Project Goals
 
+[Back to table of contents](#table-of-contents)
+
 The goal of this project is to create a real-time chat application that allows users to communicate instantly. The application is designed to provide a seamless and secure user experience with features like user authentication, profile management, and real-time messaging.
 
 ---
 
 ## User Experience (UX)
 
+[Back to table of contents](#table-of-contents)
+
 ### User Stories
+
+[Back to table of contents](#table-of-contents)
 
 - As a user, I want to register an account so that I can log in and use the chat.
 - As a user, I want to log in with my username and password so that I can access my chat sessions.
@@ -104,7 +112,11 @@ The goal of this project is to create a real-time chat application that allows u
 
 ## Design
 
+[Back to table of contents](#table-of-contents)
+
 ### Frontend Authentication Pages
+
+[Back to table of contents](#table-of-contents)
 
 The application includes the following authentication pages:
 
@@ -124,6 +136,8 @@ The application includes the following authentication pages:
 
 ### Home Page UI Design
 
+[Back to table of contents](#table-of-contents)
+
 The Home Page UI has been completed with the following features:
 
 1. **Sidebar**
@@ -141,17 +155,25 @@ The Home Page UI has been completed with the following features:
 
 ### Wireframes
 
+[Back to table of contents](#table-of-contents)
+
 _(Include links or images of wireframes for key pages like Login, Signup, Chat Interface, etc.)_
 
 ### Color Scheme
+
+[Back to table of contents](#table-of-contents)
 
 _(Specify the color palette used in the application.)_
 
 ### Typography
 
+[Back to table of contents](#table-of-contents)
+
 _(Specify the fonts used for headings, body text, etc.)_
 
 ### Browser Icon and App Name
+
+[Back to table of contents](#table-of-contents)
 
 - The browser icon has been updated to a custom chat icon (`chat-icon.svg`).
 - The app name displayed in the browser tab is now **Go-Chat**.
@@ -160,7 +182,11 @@ _(Specify the fonts used for headings, body text, etc.)_
 
 ## Features
 
+[Back to table of contents](#table-of-contents)
+
 ### Existing Features
+
+[Back to table of contents](#table-of-contents)
 
 - **User Authentication:** Secure signup, login, and logout functionality using JWT and cookies.
 - **Real-Time Feedback:** Integrated `react-hot-toast` for real-time notifications.
@@ -169,6 +195,8 @@ _(Specify the fonts used for headings, body text, etc.)_
 - **Responsive Design:** Fully responsive layout for all devices.
 
 ### Future Features
+
+[Back to table of contents](#table-of-contents)
 
 - Group chats.
 - Online status indicators.
@@ -179,7 +207,11 @@ _(Specify the fonts used for headings, body text, etc.)_
 
 ## Technologies Used
 
+[Back to table of contents](#table-of-contents)
+
 ### Frontend
+
+[Back to table of contents](#table-of-contents)
 
 - React
 - Vite
@@ -191,6 +223,8 @@ _(Specify the fonts used for headings, body text, etc.)_
 - **React Hot Toast**: For real-time notifications.
 
 ### Backend
+
+[Back to table of contents](#table-of-contents)
 
 - Node.js
 - Express.js
@@ -204,13 +238,19 @@ _(Specify the fonts used for headings, body text, etc.)_
 
 ### API Endpoints
 
+[Back to table of contents](#table-of-contents)
+
 _(Add details about API endpoints as needed.)_
 
 ---
 
 ## Testing
 
+[Back to table of contents](#table-of-contents)
+
 ### Manual Testing
+
+[Back to table of contents](#table-of-contents)
 
 The application was thoroughly tested during development and after deployment to ensure all features work as expected. The table below summarizes the manual testing results:
 
@@ -232,13 +272,19 @@ The application was thoroughly tested during development and after deployment to
 
 ### Validator Testing
 
+[Back to table of contents](#table-of-contents)
+
 _(Provide details about HTML, CSS, and JavaScript validation.)_
 
 ### Performance Testing
 
+[Back to table of contents](#table-of-contents)
+
 _(Include Lighthouse scores for Performance, Accessibility, Best Practices, SEO.)_
 
 ### Known Bugs
+
+[Back to table of contents](#table-of-contents)
 
 _(List any known bugs or issues.)_
 
@@ -246,7 +292,11 @@ _(List any known bugs or issues.)_
 
 ## DevOps Implementation Strategy
 
+[Back to table of contents](#table-of-contents)
+
 ### Introduction
+
+[Back to table of contents](#table-of-contents)
 
 **Project Overview:**
 
@@ -272,6 +322,8 @@ This team structure supports contemporary DevOps practices with shared ownership
 ---
 
 ### Overall Strategy
+
+[Back to table of contents](#table-of-contents)
 
 **Vision (12-24 months):**
 
@@ -305,6 +357,8 @@ DevOps success means the team can deliver small, low-risk changes to production 
 ---
 
 ### Branching Strategy and Integration Controls
+
+[Back to table of contents](#table-of-contents)
 
 **Branching Model:**
 
@@ -349,6 +403,8 @@ Code review is used as a quality and learning mechanism, not only a merge gate. 
 ---
 
 ### Continuous Integration and Deployment Pipeline
+
+[Back to table of contents](#table-of-contents)
 
 **Workflow Architecture & Design Principles:**
 
@@ -425,6 +481,8 @@ The workflow uses GitHub environment names `development`, `staging`, and `produc
 
 ### Software Release Strategy
 
+[Back to table of contents](#table-of-contents)
+
 **Deployment Pipeline Stages & Gates:**
 
 | Stage | Trigger | Automated Gates | Manual Gates | Promotion Criteria |
@@ -464,6 +522,8 @@ The workflow uses GitHub environment names `development`, `staging`, and `produc
 ---
 
 ### Pipeline Technology and Tool Selection
+
+[Back to table of contents](#table-of-contents)
 
 **DevOps Toolchain Overview:**
 
@@ -554,6 +614,8 @@ The DevOps strategy evolves from a simple CI-first mindset to a measurable, poli
 
 ## Deployment
 
+[Back to table of contents](#table-of-contents)
+
 The application is deployed through GitHub Actions using environment-specific deployments, with the production site hosted on [Render](https://render.com). The workflow shows the environment link on each deployment job once the run completes, and the production job uses [https://real-time-chat-app-production-mdoy.onrender.com/](https://real-time-chat-app-production-mdoy.onrender.com/).
 
 1. **Build stage**:
@@ -590,13 +652,19 @@ The application is deployed through GitHub Actions using environment-specific de
 
 ## Local Development
 
+[Back to table of contents](#table-of-contents)
+
 ### Prerequisites
+
+[Back to table of contents](#table-of-contents)
 
 - Node.js and npm (or yarn) installed.
 - MongoDB instance (local or cloud-based like MongoDB Atlas).
 - Cloudinary account (for image uploads).
 
 ### Installation
+
+[Back to table of contents](#table-of-contents)
 
 1. Navigate to the project directory:
 
@@ -659,6 +727,8 @@ The application is deployed through GitHub Actions using environment-specific de
 
 ### Automated Testing & Quality Checks
 
+[Back to table of contents](#table-of-contents)
+
 The repository is configured as an npm workspace so the frontend reuses the root React installation. Run all validation commands from the project root unless stated otherwise:
 
 1. **Unit & integration tests** (backend + frontend):
@@ -686,6 +756,8 @@ This uses `@vitest/coverage-v8` and fails the pipeline if the global thresholds 
 All three commands are exercised inside the CI workflow to keep CA1 deliverables green.
 
 ### Test & Coverage Snapshot (13 Mar 2026)
+
+[Back to table of contents](#table-of-contents)
 
 - **Vitest run:** `npm run test -- --coverage`
 - **Result:** 35 files / 72 tests passing (no skips) in ≈15.7s wall time
@@ -716,6 +788,8 @@ All three commands are exercised inside the CI workflow to keep CA1 deliverables
 
 ## Send Message Functionality
 
+[Back to table of contents](#table-of-contents)
+
 This application enables users to send text messages to each other in real-time. The message sending process involves both frontend and backend components working together seamlessly.
 
 **Frontend Implementation:**
@@ -730,6 +804,8 @@ This application enables users to send text messages to each other in real-time.
 - Socket.IO is used to emit the new message to the recipient in real-time.
 
 ## Socket.IO Implementation
+
+[Back to table of contents](#table-of-contents)
 
 Socket.IO is used to provide real-time communication features in this application. It enables instant message delivery and online status updates.
 
@@ -749,7 +825,11 @@ Socket.IO is used to provide real-time communication features in this applicatio
 
 ## API Endpoints
 
+[Back to table of contents](#table-of-contents)
+
 ### Signup Route
+
+[Back to table of contents](#table-of-contents)
 
 **POST** `/api/auth/signup`  
 **Description:** Registers a new user.
@@ -781,6 +861,8 @@ Socket.IO is used to provide real-time communication features in this applicatio
 
 ### Login Route
 
+[Back to table of contents](#table-of-contents)
+
 **POST** `/api/auth/login`  
 **Description:** Logs in an existing user.
 
@@ -808,6 +890,8 @@ Socket.IO is used to provide real-time communication features in this applicatio
 
 ### Logout Route
 
+[Back to table of contents](#table-of-contents)
+
 **POST** `/api/auth/logout`  
 **Description:** Logs out the current user by clearing the JWT cookie.
 
@@ -822,6 +906,8 @@ Socket.IO is used to provide real-time communication features in this applicatio
 ---
 
 ### Message Routes
+
+[Back to table of contents](#table-of-contents)
 
 #### **GET** `/api/messages/:id`
 
@@ -893,6 +979,8 @@ Socket.IO is used to provide real-time communication features in this applicatio
 
 ### User Routes
 
+[Back to table of contents](#table-of-contents)
+
 #### **GET** `/api/users/`
 
 **Description:** Fetches a list of users excluding the logged-in user for the sidebar.
@@ -930,6 +1018,8 @@ Socket.IO is used to provide real-time communication features in this applicatio
 
 ## Testing
 
+[Back to table of contents](#table-of-contents)
+
 All routes (Signup, Login, Logout) were tested using [Postman](https://www.postman.com/). Below are the steps to test:
 
 1. Open Postman and create a new request.
@@ -941,6 +1031,8 @@ All routes (Signup, Login, Logout) were tested using [Postman](https://www.postm
 ---
 
 ## Avatar Placeholder
+
+[Back to table of contents](#table-of-contents)
 
 The application uses a configurable avatar template defined via the `AVATAR_TEMPLATE_URL` environment variable. The default configuration points to the public service at [https://avatar-placeholder.iran.liara.run/](https://avatar-placeholder.iran.liara.run/).
 
@@ -959,20 +1051,30 @@ To use another provider, update `AVATAR_TEMPLATE_URL` with that service’s URL 
 
 ## Credits
 
+[Back to table of contents](#table-of-contents)
+
 ### Content
+
+[Back to table of contents](#table-of-contents)
 
 - [React Hot Toast Documentation](https://react-hot-toast.com/)
 - [Zustand Documentation](https://zustand-demo.pmnd.rs/)
 
 ### Media
 
+[Back to table of contents](#table-of-contents)
+
 _(Acknowledge sources for images, icons, etc.)_
 
 ### Code
 
+[Back to table of contents](#table-of-contents)
+
 _(Acknowledge any significant code snippets or libraries used.)_
 
 ### Acknowledgements
+
+[Back to table of contents](#table-of-contents)
 
 - Thanks to the creators of React, Tailwind CSS, DaisyUI, and Zustand for their amazing tools.
 
@@ -980,7 +1082,11 @@ _(Acknowledge any significant code snippets or libraries used.)_
 
 ## References
 
+[Back to table of contents](#table-of-contents)
+
 ### DevOps Strategy & Principles
+
+[Back to table of contents](#table-of-contents)
 
 - Humble, J. and Farley, D. (2010) *Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation*. Addison-Wesley.
 - Kim, G., Debois, P., Willis, J. and Humble, J. (2016) *The DevOps Handbook: How to Create World-Class Agility, Reliability, and Security in Technology Organizations*. IT Revolution.
@@ -988,6 +1094,8 @@ _(Acknowledge any significant code snippets or libraries used.)_
 - Beyer, B., Jones, C., Petoff, J. and Murphy, N. (2016) *Site Reliability Engineering*. O'Reilly Media.
 
 ### Platform & Tool Documentation
+
+[Back to table of contents](#table-of-contents)
 
 - GitHub (2026) GitHub Actions documentation. Available at: https://docs.github.com/actions (Accessed: 1 April 2026).
 - GitHub (2026) Deployment environments documentation. Available at: https://docs.github.com/actions/deployment/targeting-different-environments (Accessed: 1 April 2026).
@@ -1000,11 +1108,15 @@ _(Acknowledge any significant code snippets or libraries used.)_
 
 ### Security & Scanning Tools
 
+[Back to table of contents](#table-of-contents)
+
 - Aqua Security (2026) Trivy vulnerability scanner. Available at: https://github.com/aquasecurity/trivy (Accessed: 1 April 2026).
 - Anchore (2026) Syft SBOM generator. Available at: https://github.com/anchore/syft (Accessed: 1 April 2026).
 - OpenTelemetry (2026) Documentation. Available at: https://opentelemetry.io/docs/ (Accessed: 1 April 2026).
 
 ### Infrastructure & Configuration
+
+[Back to table of contents](#table-of-contents)
 
 - Microsoft (2026) Azure Bicep documentation. Available at: https://learn.microsoft.com/azure/azure-resource-manager/bicep/ (Accessed: 1 April 2026).
 - Terraform (2026) Terraform documentation. Available at: https://www.terraform.io/docs/ (Accessed: 1 April 2026).
