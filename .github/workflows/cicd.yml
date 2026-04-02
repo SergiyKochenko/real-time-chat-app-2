@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Production
-      url: ${{ vars.PROD_FRONTEND_URL }}
+      url: https://real-time-chat-app-production-mdoy.onrender.com/
     env:
       NODE_ENV: production
       FRONTEND_URL: ${{ vars.PROD_FRONTEND_URL }}
@@ -117,4 +117,4 @@ jobs:
       - name: Deploy with Docker Compose (Production)
         run: |
           docker-compose -f deploy/docker-compose.yml up -d --build
-          echo "Deployed to Production (${{ vars.PROD_FRONTEND_URL }})"
+          echo "Deployed to Production (https://real-time-chat-app-production-mdoy.onrender.com/)"
