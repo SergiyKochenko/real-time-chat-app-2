@@ -1,9 +1,6 @@
 
 # Real-Time Chat App
 
-![CI](https://github.com/SergiyKochenko/real-time-chat-app-2/actions/workflows/ci.yml/badge.svg)
-![codecov](https://codecov.io/gh/SergiyKochenko/real-time-chat-app-2/branch/main/graph/badge.svg)
-
 A real-time chat application allowing users to communicate instantly. Built using the MERN stack (MongoDB, Express, React, Node.js) and Socket.IO for real-time web socket communication.
 
 [View Live Demo](https://real-time-chat-app-production-mdoy.onrender.com/)  
@@ -48,11 +45,19 @@ You can test the responsiveness of the application using the [Am I Responsive?](
     - [Validator Testing](#validator-testing)
     - [Performance Testing](#performance-testing)
     - [Known Bugs](#known-bugs)
+  - [DevOps Implementation Strategy](#devops-implementation-strategy)
+    - [Introduction](#introduction)
+    - [Overall Strategy](#overall-strategy)
+    - [Branching Strategy and Integration Controls](#branching-strategy-and-integration-controls)
+    - [Continuous Integration and Deployment Pipeline](#continuous-integration-and-deployment-pipeline)
+    - [Software Release Strategy](#software-release-strategy)
+    - [Pipeline Technology and Tool Selection](#pipeline-technology-and-tool-selection)
   - [Deployment](#deployment)
   - [Local Development](#local-development)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Automated Testing \& Quality Checks](#automated-testing--quality-checks)
+    - [Test \& Coverage Snapshot (13 Mar 2026)](#test--coverage-snapshot-13-mar-2026)
   - [Send Message Functionality](#send-message-functionality)
   - [Socket.IO Implementation](#socketio-implementation)
   - [API Endpoints](#api-endpoints-1)
@@ -71,7 +76,11 @@ You can test the responsiveness of the application using the [Am I Responsive?](
     - [Media](#media)
     - [Code](#code)
     - [Acknowledgements](#acknowledgements)
-  - [License](#license)
+  - [References](#references)
+    - [DevOps Strategy \& Principles](#devops-strategy--principles)
+    - [Platform \& Tool Documentation](#platform--tool-documentation)
+    - [Security \& Scanning Tools](#security--scanning-tools)
+    - [Infrastructure \& Configuration](#infrastructure--configuration)
 
 ---
 
@@ -235,6 +244,312 @@ _(List any known bugs or issues.)_
 
 ---
 
+## DevOps Implementation Strategy
+
+### Introduction
+
+**Project Overview:**
+
+The Real-Time Chat App is a full-stack web application that supports real-time one-to-one and group communication. The technology stack includes:
+- **Frontend:** React (Vite)
+- **Backend:** Node.js/Express with Socket.IO
+- **Database:** MongoDB
+- **Deployment Target:** Container-based hosting on Azure Web App for Containers
+- **Source Control:** GitHub with GitHub Actions for CI/CD orchestration
+
+**Team Structure:**
+
+The project is delivered by a multi-disciplinary team of eight professionals:
+- 2 Backend Engineers
+- 2 Frontend Engineers
+- 1 DevOps/Platform Engineer
+- 1 QA Automation Engineer
+- 1 Product Owner/Scrum Facilitator
+- 1 Security Champion (shared responsibility across senior developers)
+
+This team structure supports contemporary DevOps practices with shared ownership of quality, secure-by-default engineering, rapid feedback loops, and collaborative operations.
+
+---
+
+### Overall Strategy
+
+**Vision (12-24 months):**
+
+DevOps success means the team can deliver small, low-risk changes to production multiple times per day with high reliability, low recovery time, and complete deployment traceability. Success is evidenced by sustained DORA improvements, stable SLOs, and predictable release flow.
+
+**Core Values & Principles:**
+
+- **Automation-first engineering:** Pipeline-as-code, IaC, automated tests and security scanning
+- **Quality-as-code:** Tests and linting integrated into every commit
+- **Security-by-default:** Dependency scanning, SAST, vulnerability policies enforced before merge
+- **Transparency and shared responsibility:** Blameless postmortems, shared incident ownership, cross-functional reviews
+- **Small, reversible changes:** Short-lived branches, atomic commits, easy rollbacks
+- **Continuous learning:** Evidence-driven decisions via DORA metrics, SRE SLO tracking, and retrospectives
+
+**CAMS Framework Application:**
+
+- **Culture:** Blameless postmortems, shared incident ownership, cross-functional code reviews
+- **Automation:** Pipeline-as-code, IaC, automated tests and security scanning
+- **Measurement:** DORA metrics, SRE SLO/error-budget tracking, CI performance indicators
+- **Sharing:** ADRs, runbooks, review checklists, release notes and incident write-ups
+
+**DORA Metrics Goals:**
+
+| Metric | Baseline | 8 Weeks | 6 Months |
+|--------|----------|---------|----------|
+| **Deployment Frequency** | 1 per week | ≥1 per day | ≥3 per day |
+| **Lead Time for Changes** | ~1 day | <2 hours | <1 hour |
+| **Change Failure Rate** | Untracked | ≤10% | ≤7% |
+| **Mean Time to Recovery (Sev1)** | ~2 hours | <30 minutes | <20 minutes |
+
+---
+
+### Branching Strategy and Integration Controls
+
+**Branching Model:**
+
+The recommended strategy is **Trunk-Based Development** with short-lived branches, selected for its alignment with frequent integration and rapid deployment while minimizing merge debt and long-lived branch risk.
+
+**Branch Policy:**
+- **main:** Protected, always releasable, deployment-ready
+- **feature branches:** `feat/*`, `fix/*`, `chore/*`, `docs/*` — target lifetime ≤48 hours
+- **hotfix branches:** `hotfix/*` — urgent production fixes, merged back to main immediately
+- **Release management:** Semantic versioning tags (`vX.Y.Z`, `vX.Y.Z-rc.N`)
+
+**Protection Rules & Code Review Policy:**
+
+- **Pull Request Required:** All changes to main must go through code review
+- **Approval Requirements:**
+  - Normal changes: ≥1 approval
+  - High-risk areas (auth, security, database schema, deployment workflows): ≥2 approvals
+- **CODEOWNERS Enforcement:** Enforced for backend controllers, auth middleware, workflows, and infrastructure files
+- **Stale Approvals:** Dismissed after new commits
+- **Conversation Resolution:** Required before merge
+- **Protected Actions:** Force push and direct push to main are disabled
+- **Merge Strategy:** Squash merge with Conventional Commits for traceable changelog and semantic versioning
+
+**Required CI Gate Checks:**
+
+Before code can merge into main, the following checks must pass:
+- ✅ Build pass (frontend and backend)
+- ✅ Unit and integration tests (≥80% coverage threshold)
+- ✅ Linting and code formatting
+- ✅ Static analysis / SAST
+- ✅ Dependency and container vulnerability scans
+- ✅ SBOM generation and policy validation
+
+**Code Review as Knowledge Sharing:**
+
+Code review is used as a quality and learning mechanism, not only a merge gate. The team employs:
+- Rotating reviewers to spread system knowledge
+- Checklist-based reviews focusing on architecture, security, and maintainability
+- Cross-component review participation from multiple specialists
+- Required rationale comments and linked evidence (tests, metrics impact, rollback plan) for non-trivial changes
+
+---
+
+### Continuous Integration and Deployment Pipeline
+
+**Workflow Architecture & Design Principles:**
+
+- **Philosophy:** Reusable workflows/composite actions, fail-fast gates, immutable artifact promotion
+- **Runner Strategy:** GitHub-hosted `ubuntu-latest` by default; self-hosted runners reserved for specific workloads or network constraints
+- **Concurrency Model:** Cancel in-progress runs for PR branches; protect production deployment jobs from cancellation once started
+- **Secrets & Environment Strategy:** GitHub Environments (dev/staging/production) with environment-scoped secrets, OIDC federation to Azure, no long-lived cloud credentials
+
+**Continuous Integration Pipeline:**
+
+**CI Triggers:**
+- Pull requests to main
+- Pushes to main
+- Manual dispatch (workflow_dispatch)
+
+**CI Job Design & Execution:**
+
+| Job | Stage | Purpose | Dependencies |
+|-----|-------|---------|--------------|
+| **Static Checks** | Parallel | Lint, format validation | None |
+| **Backend Tests** | Parallel | Unit + integration tests | None |
+| **Frontend Tests** | Parallel | Unit/component tests | None |
+| **Security Scan** | Parallel | Dependency audit + SAST | None |
+| **Build/Package** | Sequential | Compile artifacts | All parallel jobs |
+| **Container Build** | Sequential | Docker image creation & scan | Build pass |
+
+**Caching & Artifacts:**
+
+- Node.js dependency caching via `actions/setup-node` (root + frontend lockfiles)
+- Build artifacts uploaded for traceability (frontend dist, test reports, coverage summaries)
+- Container image tags:
+  - Commit SHA (for traceability)
+  - Semantic version tags on releases
+  - `latest-main` for non-production deployments
+
+**Software Bill of Materials (SBOM):**
+
+- SBOM generated with Syft for each release artifact
+- Trivy-based vulnerability scanning fails pipeline on high/critical vulnerabilities
+- Vulnerability policy enforced before build completion
+
+**Continuous Delivery / Deployment Pipeline:**
+
+**CD Architecture:**
+
+- **dev environment:** Auto-triggered after successful main pipeline
+- **staging environment:** Promoted only after dev smoke checks pass
+- **production environment:** Requires manual environment approvals and signed/release tag restrictions
+
+**GitHub Environments Configuration:**
+
+| Environment | Required Reviewers | Wait Timer | Branch/Tag Restrictions | Sealed Secrets |
+|-------------|-------------------|------------|------------------------|----------------|
+| **dev** | None (auto) | None | main only | Dev-scoped |
+| **staging** | 1 reviewer | 1 hour | Release tags only | Staging-scoped |
+| **production** | 2 reviewers | 4 hours | Signed release tags | Production-scoped |
+
+**Post-Deploy Verification & Rollback:**
+
+- **Automated smoke checks:** Health endpoint, auth flow, WebSocket connect/send/receive
+- **Canary observation window:** Error-rate and latency threshold checks (5-minute window)
+- **Automatic rollback:** Triggered on sustained threshold breach (e.g., error rate >5%, p99 latency >2s)
+- **Rollback mechanism:** Revert to previous immutable image digest; alert on-call team
+
+**DORA Metric Capture:**
+
+- **Deployment Frequency:** Count successful production deployments from workflow events
+- **Lead Time for Changes:** Measure commit timestamp → production deploy timestamp
+- **Change Failure Rate & MTTR:** Correlate failed deployments/incidents with resolution timestamps via GitHub Deployments API
+
+---
+
+### Software Release Strategy
+
+**Deployment Pipeline Stages & Gates:**
+
+| Stage | Trigger | Automated Gates | Manual Gates | Promotion Criteria |
+|-------|---------|-----------------|--------------|-------------------|
+| **dev** | Main push | CI + smoke tests | None | CI green |
+| **staging** | Dev success | Integration/regression tests | 1 reviewer | Tests green + approval |
+| **production** | Staging release tag | Smoke + canary | 2 reviewers + deployment policy | All gates green |
+
+**Deployment Strategy:**
+
+- **Primary:** Canary rollout for backend/API changes (limit blast radius)
+- **Secondary:** Blue/green for major infra/runtime transitions
+- **Feature flags:** Decouple release from feature exposure for high-risk features
+- **Progressive delivery:** Gradual traffic shift with observability-driven go/no-go decisions
+
+**Rollback & Risk Control:**
+
+- **Rollback mechanism:** Revert to previous known-good immutable image digest
+- **Automated rollback triggers:** Sustained threshold breach (error rate, latency, smoke failure)
+- **Operational resilience:** Standardized incident runbooks and recovery drills to maintain MTTR target
+- **Change management:** Deployment blackout windows, on-call readiness, staged rollbacks for large audiences
+
+**Increasing Release Frequency Safely:**
+
+- Smaller PRs and short-lived branches (≤48 hour target)
+- Higher automation coverage in tests/security gates
+- Progressive delivery with observability-driven go/no-go decisions
+- Blameless postmortems and DORA-driven feedback loops
+
+**Environment Parity & Configuration Management:**
+
+- **Containerization:** Dockerized workloads across dev/staging/production
+- **Infrastructure as Code:** IaC-managed environment resources and configuration (Bicep/Terraform)
+- **Secrets & Configuration:** Scoped per environment using GitHub Environments and Azure Key Vault
+- **Version Control:** Semantic Versioning for deterministic promotion and complete traceability
+
+---
+
+### Pipeline Technology and Tool Selection
+
+**DevOps Toolchain Overview:**
+
+| Category | Selected Tool | Justification |
+|----------|---------------|---------------|
+| **Source Code Management** | GitHub | Native integration with Actions, strong enterprise features, branch protection policies, CODEOWNERS |
+| **CI/CD Orchestration** | GitHub Actions | Workflow-as-code, reusable workflows, native to source repo, no external pricing model |
+| **Artifact Registry** | GitHub Container Registry (ghcr.io) | Integrated with GitHub, OIDC-based auth, cost-effective for private images |
+| **Container Platform** | Docker | Industry standard, multi-platform support, efficient layer caching |
+| **Infrastructure as Code** | Azure Bicep | Azure-native, readable syntax, full resource type support, integrated validation |
+| **Secrets Management** | Azure Key Vault + OIDC | Zero long-lived credentials, GitHub OIDC federation, audit trail |
+| **Observability - Logs** | Azure Application Insights | Integrated with app runtime, structured logging, dependency tracking |
+| **Observability - Metrics** | Azure Monitor | DORA metric collection, custom dashboards, alert rules |
+| **Observability - Tracing** | OpenTelemetry (future) | Vendor-agnostic, distributed tracing, W3C Trace Context standard |
+| **Container Scanning** | Trivy + Syft | Fast vuln scanning, SBOM generation, policy integration |
+| **SAST** | GitHub CodeQL | Free for public repos, integrated into Actions, comprehensive Java/JS/TS support |
+| **Dependency Scanning** | Dependabot + npm audit | Native GitHub integration, automated PRs, policy enforcement |
+
+**Toolchain Architecture:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                       GitHub Repository                      │
+│  (Source Code + Workflows + CODEOWNERS + Branch Protection)  │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│              GitHub Actions CI/CD Pipelines                   │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Pull Request Workflow                                │    │
+│  │  - Static checks (lint, format)                       │    │
+│  │  - Backend/Frontend tests                             │    │
+│  │  - Security scan (CodeQL, Dependabot)                 │    │
+│  └──────────────────────────────────────────────────────┘    │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Main Push Workflow (CI/CD)                           │    │
+│  │  - All PR checks                                      │    │
+│  │  - Build & publish container to ghcr.io              │    │
+│  │  - SBOM generation (Syft)                             │    │
+│  │  - Trivy scan + policy gate                           │    │
+│  │  - Dev environment deploy                             │    │
+│  └──────────────────────────────────────────────────────┘    │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Release Workflow (CD)                                │    │
+│  │  - Manual promotion to staging/production             │    │
+│  │  - Environment approvals (2-reviewer production)      │    │
+│  │  - Canary deploy with smoke checks                    │    │
+│  │  - Metric capture & rollback automation               │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────┬──────────────┬────────────────┬──────────────────┘
+           │              │                │
+           ▼              ▼                ▼
+┌────────────────┐ ┌──────────────┐ ┌─────────────────────┐
+│ ghcr.io        │ │ Azure Key    │ │ Azure Monitoring    │
+│ (Container     │ │ Vault        │ │ - Logs              │
+│  Registry)     │ │ (Secrets)    │ │ - Metrics           │
+└────────────────┘ └──────────────┘ │ - Alerts            │
+           │                         └─────────────────────┘
+           │                                  │
+           ▼                                  ▼
+┌──────────────────────────────────────────────────────┐
+│        Azure Web App for Containers                   │
+│  ┌──────────────────────────────────────────────┐   │
+│  │ Development  │ Staging  │ Production         │   │
+│  └──────────────────────────────────────────────┘   │
+└──────────────────────────────────────────────────────┘
+```
+
+**Continuous Improvement & Metrics:**
+
+The DevOps strategy evolves from a simple CI-first mindset to a measurable, policy-driven delivery model. Key improvements include:
+
+- **Explicit DORA correlation:** Design choices directly linked to Deployment Frequency, Lead Time, Change Failure Rate, and MTTR outcomes
+- **Immutable artifact promotion:** Ensures safer rollbacks and faster MTTR
+- **Environment approvals & policy gates:** Reduces production incidents through controlled promotion
+- **Observability integration:** Automated metric capture from GitHub Actions for data-driven improvements
+
+**Future Roadmap:**
+
+- Enhanced synthetic monitoring and end-to-end test coverage
+- Distributed tracing with OpenTelemetry
+- Improved canary automation with traffic shifting
+- Broader performance profiling and cost optimization
+- Ongoing calibration of targets using real pipeline telemetry
+
+---
+
 ## Deployment
 
 The application is deployed and hosted on [Render](https://render.com). Below are the steps to deploy the application:
@@ -366,22 +681,7 @@ All three commands are exercised inside the CI workflow to keep CA1 deliverables
 - **Result:** 35 files / 72 tests passing (no skips) in ≈15.7s wall time
 - **Environment breakdown:** transform 1.84s · setup 9.24s · collect 13.65s · tests 3.95s · env 38.96s · prepare 9.65s
 
-```text
- Test Files  35 passed (35)
-    Tests  72 passed (72)
-   Start at  20:14:33
-   Duration  15.74s (transform 1.84s, setup 9.24s, collect 13.65s, tests 3.95s, environment 38.96s, prepare 9.65s)
-```
 
-```mermaid
-%% Coverage comparison (higher is better)
-bar
-  title Coverage by metric (% of threshold)
-  "Statements" : 88.11
-  "Branches"   : 84.35
-  "Functions"  : 81.01
-  "Lines"      : 88.11
-```
 
 | File / Area                      | % Stmts | % Branch | % Funcs | % Lines | Notes                                                  |
 | -------------------------------- | ------- | -------- | ------- | ------- | ------------------------------------------------------ |
@@ -397,6 +697,10 @@ bar
 | frontend/src/pages/signup        | 100     | 84.61    | 90      | 100     | Gender checkbox still has two untested branches        |
 
 > Full HTML/LCOV artifacts live under `coverage/`; regenerate with `npm run test -- --coverage` after any changes.
+
+**Coverage Visualization:**
+
+![Unit Test Coverage](frontend/public/UnittestCverage.png)
 
 ---
 
@@ -664,6 +968,35 @@ _(Acknowledge any significant code snippets or libraries used.)_
 
 ---
 
-## License
+## References
 
-_(Specify the license for your project, e.g., MIT License.)_
+### DevOps Strategy & Principles
+
+- Humble, J. and Farley, D. (2010) *Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation*. Addison-Wesley.
+- Kim, G., Debois, P., Willis, J. and Humble, J. (2016) *The DevOps Handbook: How to Create World-Class Agility, Reliability, and Security in Technology Organizations*. IT Revolution.
+- Forsgren, N., Humble, J. and Kim, G. (2018) *Accelerate: The Science of Lean Software and DevOps*. IT Revolution.
+- Beyer, B., Jones, C., Petoff, J. and Murphy, N. (2016) *Site Reliability Engineering*. O'Reilly Media.
+
+### Platform & Tool Documentation
+
+- GitHub (2026) GitHub Actions documentation. Available at: https://docs.github.com/actions (Accessed: 1 April 2026).
+- GitHub (2026) Deployment environments documentation. Available at: https://docs.github.com/actions/deployment/targeting-different-environments (Accessed: 1 April 2026).
+- GitHub (2026) Code scanning with CodeQL documentation. Available at: https://docs.github.com/code-security/code-scanning (Accessed: 1 April 2026).
+- GitHub (2026) Dependabot alerts documentation. Available at: https://docs.github.com/code-security/dependabot (Accessed: 1 April 2026).
+- Microsoft (2026) Azure Key Vault documentation. Available at: https://learn.microsoft.com/azure/key-vault/ (Accessed: 1 April 2026).
+- Microsoft (2026) Azure Monitor documentation. Available at: https://learn.microsoft.com/azure/azure-monitor/ (Accessed: 1 April 2026).
+- Microsoft (2026) Azure Web App for Containers documentation. Available at: https://learn.microsoft.com/azure/app-service/containers/ (Accessed: 1 April 2026).
+- Docker (2026) Docker documentation. Available at: https://docs.docker.com/ (Accessed: 1 April 2026).
+
+### Security & Scanning Tools
+
+- Aqua Security (2026) Trivy vulnerability scanner. Available at: https://github.com/aquasecurity/trivy (Accessed: 1 April 2026).
+- Anchore (2026) Syft SBOM generator. Available at: https://github.com/anchore/syft (Accessed: 1 April 2026).
+- OpenTelemetry (2026) Documentation. Available at: https://opentelemetry.io/docs/ (Accessed: 1 April 2026).
+
+### Infrastructure & Configuration
+
+- Microsoft (2026) Azure Bicep documentation. Available at: https://learn.microsoft.com/azure/azure-resource-manager/bicep/ (Accessed: 1 April 2026).
+- Terraform (2026) Terraform documentation. Available at: https://www.terraform.io/docs/ (Accessed: 1 April 2026).
+
+
